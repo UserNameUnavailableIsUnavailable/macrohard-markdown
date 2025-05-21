@@ -1,0 +1,45 @@
+---
+title: Hello, world!
+---
+
+## Section A {#A}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eros lorem, posuere non pharetra vitae, volutpat at odio. Phasellus eu aliquet turpis. Donec in est vel felis consectetur euismod. Vestibulum pulvinar eros non quam congue pulvinar. Maecenas laoreet, libero in luctus molestie, sapien sem venenatis diam, vitae commodo elit lectus eget velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin scelerisque consequat sollicitudin. Vivamus at lacinia arcu, sed vestibulum ex. Duis efficitur facilisis hendrerit. Pellentesque rhoncus nisl sed velit vulputate, eu blandit neque consequat. Aliquam pellentesque augue eget vulputate viverra. Vestibulum pulvinar rhoncus blandit.
+
+~~A~~ [^1]
+
+> ABCDE
+> - Foo
+> - Bar
+
+This is a inline equation: $y = \boldsymbol{w}^\mathsf{T}\boldsymbol{x}+b$.
+
+And this is a block equation:
+
+$$E = mc^2.$$
+
+:::: { #custom-block .columns width="200" }
+
+::: { .column }
+hello
+:::
+
+::: { .column }
+world
+:::
+
+::::
+
+![Foo](./foo.gif)
+
+## Section B { #B }
+
+Pellentesque lacinia ante risus, ac pharetra ex lacinia ac. Nulla vel tellus lectus. Nam at eleifend elit. Suspendisse porta augue neque, a lobortis tellus malesuada non. Nunc a congue lorem. Nam arcu lacus, tincidunt faucibus ipsum congue, laoreet posuere lectus. Vestibulum eleifend lacus nec erat laoreet mollis. Pellentesque facilisis ex vel ligula ultrices malesuada. Donec eget nisi laoreet, cursus ex vel, faucibus massa. Fusce lacinia dictum odio, ut rhoncus tortor eleifend non. Cras ullamcorper varius diam eget malesuada. Quisque iaculis, justo in euismod viverra, orci neque consequat massa, consectetur faucibus risus ligula ac sem. In vel lacus justo. Donec bibendum quam sit amet diam pulvinar placerat. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+
+Quisque mi augue, mollis non ipsum vulputate, porta maximus lacus. Donec condimentum tempor tellus, congue rhoncus diam semper sed. Pellentesque non mattis quam. Mauris maximus tempus mauris, vitae gravida est porttitor ac. In tellus sapien, accumsan et diam vel, gravida mattis lacus. Etiam mi dui, pulvinar in finibus quis, vulputate pharetra justo. Vivamus id faucibus magna. In hac habitasse platea dictumst. Quisque id rutrum elit, ac volutpat urna. Phasellus id auctor justo. Maecenas vitae dictum purus, vitae sagittis lorem. Vivamus condimentum, ante a blandit consectetur, dolor massa fringilla lacus, quis accumsan neque arcu ac eros. Cras pretium maximus tellus ac congue.
+
+Aenean dictum lacus finibus suscipit hendrerit. In sollicitudin sapien sed quam porta laoreet. Duis pharetra congue ex vitae efficitur. Cras mattis eleifend sodales. Nam imperdiet, orci sed porttitor mattis, velit urna venenatis ligula, vel varius ex tortor ac lacus. Mauris fermentum, velit eget dictum sagittis, dui sapien placerat tortor, in luctus tellus lorem sit amet nunc. Nam consequat est non dignissim suscipit. Quisque vitae ex non libero posuere lacinia. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec ac eros eu ex vulputate sollicitudin. Pellentesque eleifend, sem at aliquet dapibus, metus neque vehicula ipsum, quis mollis nisl ligula nec lectus. Aenean fermentum est vulputate, finibus ipsum sit amet, commodo ligula. Nam tincidunt luctus felis nec semper. Proin eget posuere erat, et auctor purus.
+
+Nullam quam magna, malesuada vel consequat ac, ultrices a tellus. Sed molestie ultricies ligula vitae tempor. Nunc cursus orci id mollis lacinia. Aenean interdum mauris vel felis aliquet fermentum. Etiam vulputate nisl vitae nunc pharetra, at dictum diam commodo. Aliquam risus ex, imperdiet a turpis eget, feugiat molestie neque. Suspendisse dui leo, convallis eget molestie vel, finibus sit amet sapien. Proin maximus non nunc eu commodo. Aliquam et eros vel tellus lobortis dignissim sit amet in massa. Donec sed arcu erat. Nunc semper est vel nunc congue, iaculis dictum erat venenatis.
+
+[^1]: Hello!
