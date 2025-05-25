@@ -4,33 +4,82 @@ title: Hello, world!
 
 ## Section A {#A}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eros lorem, posuere non pharetra vitae, volutpat at odio. Phasellus eu aliquet turpis. Donec in est vel felis consectetur euismod. Vestibulum pulvinar eros non quam congue pulvinar. Maecenas laoreet, libero in luctus molestie, sapien sem venenatis diam, vitae commodo elit lectus eget velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin scelerisque consequat sollicitudin. Vivamus at lacinia arcu, sed vestibulum ex. Duis efficitur facilisis hendrerit. Pellentesque rhoncus nisl sed velit vulputate, eu blandit neque consequat. Aliquam pellentesque augue eget vulputate viverra. Vestibulum pulvinar rhoncus blandit.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eros lorem, posuere non pharetra vitae, volutpat at odio. Phasellus eu aliquet turpis. Donec in est vel felis consectetur euismod. Vestibulum pulvinar eros non quam congue pulvinar. Maecenas laoreet, libero in luctus molestie, sapien sem venenatis diam, vitae commodo elit lectus eget velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin scelerisque consequat sollicitudin. Vivamus at lacinia arcu, sed vestibulum ex. Duis efficitur facilisis hendrerit. Pellentesque rhoncus nisl sed velit vulputate, eu blandit neque consequat. Aliquam pellentesque augue eget vulputate viverra. `Vestibulum` pulvinar rhoncus blandit.
+
+```c { code-line-numbers="1-2,5,7" }
+int a = 0;
+int b = 0;
+foo();
+bar();
+#ifdef _DEBUG
+printf("hello, world!");
+#endif
+```
+
+[Mix inline `code` with ordinary text](https://macrohard.fun/)
 
 ~~A~~ [^1]
 
 > ABCDE
 > - Foo
 > - Bar
+> $ a > b $
 
-This is a inline equation: $y = \boldsymbol{w}^\mathsf{T}\boldsymbol{x}+b$.
+This is a inline equation: $y = \boldsymbol{w}^\mathsf{T}\boldsymbol{x}+b$. Here's another one $f'(x) = \frac{\mathrm{d}y}{\mathrm{d}x}$.
 
 And this is a block equation:
 
-$$E = mc^2.$$
+|theorem (EN, left aligned)|定理（中文，居中）|formula (right-aligned)|
+|:---|:---:|---:|
+|Newton's Law II|牛顿第二定律|$\boldsymbol{F} = m\boldsymbol{a}$|
+|Law of Universal Gravitation|万有引力定律|$\boldsymbol{F} = G\frac{Mm}{\|r\|^3}\boldsymbol{r}$|
+
+$$\boldsymbol{e}_r = \frac{\boldsymbol{r}}{\|\boldsymbol{r}\|}.$$
+
+$$
+\begin{equation}
+y = \boldsymbol{w}^\mathsf{T}\boldsymbol{x} + b
+y = ax+b
+\end{equation}
+$$
 
 :::: { #custom-block .columns width="200" }
 
 ::: { .column }
-hello
+
+### Column 1
+
+第一栏
+
+第一栏
+
+第一栏
 :::
 
 ::: { .column }
-world
+### Column 2
+
+第二栏
+
+第二栏
+
+第二栏
+:::
+
+::: { .column }
+
+### Column 3
+
+第三栏
+
+第三栏
+
+第三栏
 :::
 
 ::::
 
-![Foo](./foo.gif)
+![普通文本 `code` $f\left(x\right)$](./doro-maodie.gif)
 
 ## Section B { #B }
 

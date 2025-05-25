@@ -1,6 +1,6 @@
 import type { Token } from "markdown-it/index.js";
 
-const PATTERN = /^\{.*}$/
+const PATTERN = /^\{.+?\}$/
 
 // 容器格式：
 /// ::: { }
@@ -39,7 +39,7 @@ export const render = (tokens: Token[], index: number) => {
     attrList.push(`${e[0]}="${e[1]}"`)
   });
   if (tokens[index].nesting === 1) {
-    return `<div ${attrList.join(' ')} }>\n`
+    return `<div ${attrList.join(' ')} >\n`
   } else {
     return "</div>\n"
   }

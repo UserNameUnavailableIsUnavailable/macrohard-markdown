@@ -19,7 +19,7 @@ function render_footnote_caption (tokens, idx/*, options, env, slf */) {
 
   if (tokens[idx].meta.subId > 0) n += `:${tokens[idx].meta.subId}`
 
-  return `[${n}]`
+  return ` ${n} `
 }
 
 function render_footnote_ref (tokens, idx, options, env, slf) {

@@ -1,6 +1,6 @@
 import type { PluginSimple } from "markdown-it";
 
-declare module "./footnote.js" {
-    const MarkdownItFootnote: PluginSimple;
-    export default MarkdownItFootnote
+declare module "./Footnote.js" {
+    const Footnote: PluginSimple;
+    export default Footnote
 }

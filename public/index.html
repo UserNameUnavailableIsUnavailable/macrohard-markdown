@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -94,25 +129,82 @@ window.Quarto = {
 
 <section id="A" class="level2">
 <h2 class="anchored" data-anchor-id="A">Section A</h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eros lorem, posuere non pharetra vitae, volutpat at odio. Phasellus eu aliquet turpis. Donec in est vel felis consectetur euismod. Vestibulum pulvinar eros non quam congue pulvinar. Maecenas laoreet, libero in luctus molestie, sapien sem venenatis diam, vitae commodo elit lectus eget velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin scelerisque consequat sollicitudin. Vivamus at lacinia arcu, sed vestibulum ex. Duis efficitur facilisis hendrerit. Pellentesque rhoncus nisl sed velit vulputate, eu blandit neque consequat. Aliquam pellentesque augue eget vulputate viverra. Vestibulum pulvinar rhoncus blandit.</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eros lorem, posuere non pharetra vitae, volutpat at odio. Phasellus eu aliquet turpis. Donec in est vel felis consectetur euismod. Vestibulum pulvinar eros non quam congue pulvinar. Maecenas laoreet, libero in luctus molestie, sapien sem venenatis diam, vitae commodo elit lectus eget velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin scelerisque consequat sollicitudin. Vivamus at lacinia arcu, sed vestibulum ex. Duis efficitur facilisis hendrerit. Pellentesque rhoncus nisl sed velit vulputate, eu blandit neque consequat. Aliquam pellentesque augue eget vulputate viverra. <code>Vestibulum</code> pulvinar rhoncus blandit.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource c number-lines code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1"></a><span class="dt">int</span> a <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="dt">int</span> b <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a>foo<span class="op">();</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a>bar<span class="op">();</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="pp">#ifdef _DEBUG</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>printf<span class="op">(</span><span class="st">"hello, world!"</span><span class="op">);</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="pp">#endif</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><a href="https://macrohard.fun/">Mix inline <code>code</code> with ordinary text</a></p>
 <p><del>A</del> <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <blockquote class="blockquote">
-<p>ABCDE - Foo - Bar</p>
+<p>ABCDE - Foo - Bar $ a &gt; b $</p>
 </blockquote>
-<p>This is a inline equation: <span class="math inline">\(y = \boldsymbol{w}^\mathsf{T}\boldsymbol{x}+b\)</span>.</p>
+<p>This is a inline equation: <span class="math inline">\(y = \boldsymbol{w}^\mathsf{T}\boldsymbol{x}+b\)</span>. Here’s another one <span class="math inline">\(f'(x) = \frac{\mathrm{d}y}{\mathrm{d}x}\)</span>.</p>
 <p>And this is a block equation:</p>
-<p><span class="math display">\[E = mc^2.\]</span></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 38%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">theorem (EN, left aligned)</th>
+<th style="text-align: center;">定理（中文，居中）</th>
+<th style="text-align: right;">formula (right-aligned)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Newton’s Law II</td>
+<td style="text-align: center;">牛顿第二定律</td>
+<td style="text-align: right;"><span class="math inline">\(\boldsymbol{F} = m\boldsymbol{a}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Law of Universal Gravitation</td>
+<td style="text-align: center;">万有引力定律</td>
+<td style="text-align: right;"><span class="math inline">\(\boldsymbol{F} = G\frac{Mm}{\|r\|^3}\boldsymbol{r}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><span class="math display">\[\boldsymbol{e}_r = \frac{\boldsymbol{r}}{\|\boldsymbol{r}\|}.\]</span></p>
+<p><span class="math display">\[
+\begin{equation}
+y = \boldsymbol{w}^\mathsf{T}\boldsymbol{x} + b
+y = ax+b
+\end{equation}
+\]</span></p>
 <div id="custom-block" class="columns" width="200">
 <div class="column">
-<p>hello</p>
+<section id="column-1" class="level3">
+<h3 class="anchored" data-anchor-id="column-1">Column 1</h3>
+<p>第一栏</p>
+<p>第一栏</p>
+<p>第一栏</p>
+</section>
 </div><div class="column">
-<p>world</p>
+<section id="column-2" class="level3">
+<h3 class="anchored" data-anchor-id="column-2">Column 2</h3>
+<p>第二栏</p>
+<p>第二栏</p>
+<p>第二栏</p>
+</section>
+</div><div class="column">
+<section id="column-3" class="level3">
+<h3 class="anchored" data-anchor-id="column-3">Column 3</h3>
+<p>第三栏</p>
+<p>第三栏</p>
+<p>第三栏</p>
+</section>
 </div>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./foo.gif" class="img-fluid figure-img"></p>
-<figcaption>Foo</figcaption>
+<p><img src="./doro-maodie.gif" class="img-fluid figure-img"></p>
+<figcaption>普通文本 <code>code</code> <span class="math inline">\(f\left(x\right)\)</span></figcaption>
 </figure>
 </div>
 </section>

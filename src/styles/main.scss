@@ -1,0 +1,28 @@
+$background-color: #222222;
+$text-color: #ffffff;
+$text-color: #ffffff;
+
+:root {
+  --background-color: white;
+  --text-color: black;
+}
+
+.dark-mode {
+  --background-color: $background-color;
+  --text-color: $text-color;
+}
+
+body {
+  background-color: $background-color;
+  color: $text-color;
+  transition: 0.3s ease-in-out;
+}
+
+.columns {
+  display: flex;
+  gap: 10px;
+}
+
+.column {
+  flex: 1;
+}
