@@ -46,7 +46,7 @@ export default function(init: {markdown_blob: string, extra_metadata: string[]})
     .use(MarkdownAttrs) // 自定义属性，如 { #Foo .Bar width="200" }
     .use(MarkdownInlineCodeHandler)
     .use(MarkdownFootnote) // 生成脚注
-    .use(MarkdownAnchor, { permalink: true, permalinkBefore: false, permalinkSymbol: '§' }) // 锚点
+    .use(MarkdownAnchor, { permalink: true, permalinkBefore: false, permalinkSymbol: "📌" }) // 锚点
     .use(MarkdownSectionize) // 将标题及其内容纳入 <section> 中
     .use(MarkdownAccomodateFigure) // 图片增强功能
     .use(math_protector.get_markdown_it_plugin())

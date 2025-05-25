@@ -66,3 +66,9 @@ onMounted(() => {
   document.body.appendChild(script)
 })
 </script>
+
+<style>
+img {
+  cursor: zoom-in; /* Makes the cursor look like a magnifying glass */
+}
+</style>

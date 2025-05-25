@@ -79,7 +79,7 @@ $$
 
 ::::
 
-![普通文本 `code` $f\left(x\right)$](./doro-maodie.gif)
+![普通文本 `code` $f\left(x\right)$](./doro-maodie.gif){ .center }
 
 ## Section B { #B }
 

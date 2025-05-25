@@ -153,6 +153,7 @@ export default class CodeHighlighter {
   }
   keep_compatibility_with_rmd() {
     // R Markdown 中使用 code-line-numbers="true" 来显示代码行号
+    // 使用 code-line-numbers="1-2,3,4,5" 来高亮指定行
     document.querySelectorAll("pre > code").forEach(e => {
       const code_line_numbers = e.getAttribute("code-line-numbers")?.trim() ?? ""
       if (code_line_numbers === "true") {
