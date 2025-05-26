@@ -143,9 +143,9 @@ export default class CodeHighlighter {
   async highlight_all() {
     Promise.all(this.promises_)
       .then(() => {
-        document.querySelectorAll("pre > code").forEach((code_block) => {
+        document.querySelectorAll("code[class*=language-]").forEach((code_block) => {
           window.Prism.highlightElement(code_block)
-        })
+        });
       })
       .catch(e => {
         console.error(e)
@@ -158,7 +158,7 @@ export default class CodeHighlighter {
       const code_line_numbers = e.getAttribute("code-line-numbers")?.trim() ?? ""
       if (code_line_numbers === "true") {
         (e.parentNode as HTMLPreElement).classList.add("line-numbers");
-      } else if (code_line_numbers?.match(/^(?:\d+(?:-\d+)?)(?:,\d+(?:-\d+)?)*$/)) {
+      } else if (code_line_numbers?.match(/^(?:\d+(?:-\d+)?)(?:,\d+(?:-\d+)?)*$/)) { // 匹配高亮指定行的模式串
         (e.parentNode as HTMLPreElement).classList.add("line-numbers");
         (e.parentNode as HTMLPreElement).setAttribute("data-line", code_line_numbers);
       }

@@ -8,8 +8,6 @@ export default class MathProtector {
   private allow_whitespace_padding_: boolean;
   private inline_delimiters_: [string, string][];
   private block_delimiters_: [string, string][];
-  private protected_markdown_blob_: string;
-  private formulas_: string[] = [];
   private math_inline_rule_: RuleInline;
   private math_block_rule_: RuleBlock;
   private math_inline_renderer_: RenderRule;
@@ -17,7 +15,6 @@ export default class MathProtector {
   private inline_surrounding_: [string, string];
   private block_surrounding_: [string, string];
   constructor(
-    markdown_blob: string,
     options: {
       allow_white_space_padding: boolean,
       inline_delimiters: [string, string][],
@@ -31,94 +28,21 @@ export default class MathProtector {
     this.block_delimiters_ = options.block_delimiters;
     this.inline_surrounding_ = options.inline_surrounding;
     this.block_surrounding_ = options.block_surrounding;
-    this.protected_markdown_blob_ = MathProtector.store_formulas(
-      this.formulas_,
-      markdown_blob,
-      [...options.inline_delimiters, ...options.block_delimiters],
-    );
     this.math_inline_rule_ = MathProtector.create_inline_math_rule({
       delimiters: options.inline_delimiters,
       allowWhiteSpacePadding: options.allow_white_space_padding
     });
     this.math_block_rule_ = MathProtector.create_block_math_rule(options.block_delimiters);
-
     this.math_inline_renderer_ = (tokens: Token[], index: number) => {
       const token = tokens[index];
-      const formula_index = Number.parseInt(token.content);
-      const formula = this.formulas_[formula_index];
-      if (!formula) return "";
-      return `${this.inline_surrounding_[0]}${formula}${this.inline_surrounding_[1]}`;
+      return `${this.inline_surrounding_[0]}${this.inline_delimiters_[0][0]}${token.content}${this.inline_delimiters_[0][1]}${this.inline_surrounding_[1]}`;
     };
-
     this.math_block_renderer_ = (tokens: Token[], index: number) => {
       const token = tokens[index];
-      const formula_index = Number.parseInt(token.content);
-      const formula = this.formulas_[formula_index];
-      if (!formula) return "";
-      return `${this.block_surrounding_[0]}${formula}${this.block_surrounding_[1]}`;
+      return `${this.block_surrounding_[0]}${this.block_delimiters_[0][0]}${token.content}${this.block_delimiters_[0][1]}${this.block_surrounding_[1]}`;
     };
   }
   // 目前仅支持 $...$ 和 $$...$$ 限定的公式
-  private static store_formulas(formulas: string[], markdown_blob: string, delimiters: [string, string][] ) {
-    const indices: number[] = []
-    indices.push(0)
-    let lookforward = ''
-    let inline_math = false
-    let display_math = false
-    for (let i = 0; i < markdown_blob.length; i++) {
-      const cur = markdown_blob.charAt(i)
-      if (i === markdown_blob.length - 1) {
-        lookforward = ''
-      } else {
-        lookforward = markdown_blob.charAt(i + 1)
-      }
-      if (cur === '\\') {
-        i++ // eat
-        continue
-      } else if (cur === '$' && lookforward === '$') {
-        if (!display_math && !inline_math) {
-          display_math = true
-          indices.push(i)
-          i += 2 // skip next $
-        } else if (display_math) { // currently in display_math
-          display_math = false
-          i += 2 // skip next $
-          indices.push(i)
-        }
-      } else if (cur === '$' && lookforward !== '$') {
-        if (!display_math && !inline_math) {
-          inline_math = true
-          indices.push(i)
-          i++
-        } else if (inline_math) {
-          inline_math = false
-          i++
-          indices.push(i)
-        }
-      }
-    }
-    indices.push(markdown_blob.length)
-    if (indices.length % 2 !== 0) {
-      indices.length--
-    }
-    if (indices.length > 2) {
-      const split: string[] = []
-      for (let i = 0; i < indices.length - 1; i++) {
-        const begin = indices[i]
-        const end = indices[i + 1]
-        const substr = markdown_blob.slice(begin, end)
-        split.push(substr)
-      }
-      for (let i = 1; i < split.length; i += 2) {
-        const index = formulas.length
-        formulas.push(split[i])
-        split[i] = split[i].startsWith("$$") ? `$$${index}$$` : `$${index}$`
-      }
-      return split.join('')
-    }
-    return markdown_blob
-
-  }
   private static create_inline_math_rule(options: {
     delimiters: Array<[string, string]>, // 公式限定符
     allowWhiteSpacePadding: boolean // 是否允许在公式开头和末尾添加空白字符
@@ -277,13 +201,9 @@ export default class MathProtector {
     };
 
   }
-  public get protected_markdown_blob() {
-    return this,this.protected_markdown_blob_;
-  }
   public get_markdown_it_plugin() {
     return (md: MarkdownIt) => {
       md.inline.ruler.before("escape", "math_inline", this.math_inline_rule_);
-      md.block.ruler.before("table", "math_inline", this.math_block_rule_);
       md.block.ruler.after("blockquote", "math_block", this.math_block_rule_, {
         alt: ["paragraph", "reference", "blockquote", "list"],
       });

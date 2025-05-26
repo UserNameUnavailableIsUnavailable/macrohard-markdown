@@ -1,13 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
 </head>
 <body>
-    <span style="white-space: pre;">
-        \n \begin \|
-    </span>
+     
 </body>
+<script>
+const delim_units = ['`', '$']
+
+function determine_delimiter(str, c) {
+    let i = 0
+    while (i < str.length) {
+        if (str.charAt(i) === c) {
+            i++
+        }
+    }
+    return str.slice(0, i)
+}
+
+function split_cells(str) {
+    let ret = []
+    let lst = 0;
+    let cur = 0;
+    if (str.charAt(cur) !== '|') return ret;
+    while (cur < str.length) {
+        if (str.charAt(cur) === '|') {
+            ret.push(str.slice(lst, cur))
+            cur++
+            lst = cur
+        } else if (delim_units.includes(str.charAt(cur))) {
+            let begin = cur
+            let delim = determine_delimiter(str.slice(cur), str.charAt(cur))
+            cur += delim.length
+            cur = str.indexOf(str.slice(cur), delim) // find matching delimiter
+            cur += delim.length // skip
+            let end = cur
+            ret.push(str.slice(begin, end))
+        } else {
+            cur++
+        }
+    }
+    return ret
+}
+
+console.log(split_cells("|`` ` |||| ``|$$\\|\\|\\|$$|"))
+</script>
 </html>

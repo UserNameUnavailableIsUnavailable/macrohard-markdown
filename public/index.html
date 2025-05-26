@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Hello, world!</title>
+<title>基于 Markdown-It 的 R Markdown 扩展语法实现（部分）</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -110,7 +110,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Hello, world!</h1>
+<h1 class="title">基于 <a href="https://github.com/markdown-it/markdown-it">Markdown-It</a> 的 R Markdown 扩展语法实现（部分）</h1>
 </div>
 
 
@@ -127,23 +127,165 @@ window.Quarto = {
 </header>
 
 
-<section id="A" class="level2">
-<h2 class="anchored" data-anchor-id="A">Section A</h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eros lorem, posuere non pharetra vitae, volutpat at odio. Phasellus eu aliquet turpis. Donec in est vel felis consectetur euismod. Vestibulum pulvinar eros non quam congue pulvinar. Maecenas laoreet, libero in luctus molestie, sapien sem venenatis diam, vitae commodo elit lectus eget velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin scelerisque consequat sollicitudin. Vivamus at lacinia arcu, sed vestibulum ex. Duis efficitur facilisis hendrerit. Pellentesque rhoncus nisl sed velit vulputate, eu blandit neque consequat. Aliquam pellentesque augue eget vulputate viverra. <code>Vestibulum</code> pulvinar rhoncus blandit.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource c number-lines code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1"></a><span class="dt">int</span> a <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="dt">int</span> b <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a>foo<span class="op">();</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a>bar<span class="op">();</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="pp">#ifdef _DEBUG</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a>printf<span class="op">(</span><span class="st">"hello, world!"</span><span class="op">);</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="pp">#endif</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>本文介绍 Macrohard 站点使用的 R Markdown 扩展语法，需要读者具备 HTML 和 Markdown 基础。该实现基于 <a href="https://github.com/markdown-it/markdown-it">Markdown-It</a> 解析器以及其强大的衍生插件，部分缺少对应插件或现有插件无法满足需求的的特性则由我自行实现，这些特性的实现将在完善后作为插件开源。</p>
+<p>本扩展采用纯前端实现，因此发布内容不需要本地编译，与同类产品 <a href="https://quarto.org">Quarto</a> 不同（基于 <a href="https://pandoc.org/">Pandoc</a>）。由于个人时间和精力有限，故仅实现了 R Markdown 扩展语法的一个子集。</p>
+<section id="预览" class="level2">
+<h2 class="anchored" data-anchor-id="预览">预览</h2>
+<p>R Markdown 预览可使用 Quarto 提供的插件，详见 <a href="https://quarto.org/">Quarto 官网</a> 及 <a href="https://marketplace.visualstudio.com/items?itemName=quarto.quarto">VSCode Quarto 插件</a>。</p>
+</section>
+<section id="基本扩展" class="level2">
+<h2 class="anchored" data-anchor-id="基本扩展">基本扩展</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>扩展</th>
+<th>语法</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>上标</td>
+<td><code>Foo^1^</code></td>
+<td>Foo<sup>bar</sup></td>
+</tr>
+<tr class="even">
+<td>下标</td>
+<td><code>Foo~1~</code></td>
+<td>Foo<sub>bar</sub></td>
+</tr>
+<tr class="odd">
+<td>下划线</td>
+<td><code>_Foo_</code></td>
+<td><em>Foo</em> <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></td>
+</tr>
+<tr class="even">
+<td>删除线</td>
+<td><code>~~Foo~~</code></td>
+<td><del>Foo</del></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="属性语法" class="level2">
+<h2 class="anchored" data-anchor-id="属性语法">属性语法</h2>
+<p>通过在 Markdown 语句块后附加 <code>{ #id .class attribute="value" }</code> 可以为该语句块指定属性。例如，下面的 Markdown 语句：</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Foo</span><span class="co">]</span>{ #Foo-Id .Foo-Inline FooProperty="Foo-Property" }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>将会产生如下的 HTML 标记：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">span</span><span class="ot"> id</span><span class="op">=</span><span class="st">"Foo-Id"</span><span class="ot"> class</span><span class="op">=</span><span class="st">"Foo-Inline"</span><span class="ot"> FooProperty</span><span class="op">=</span><span class="st">"Foo-Property"</span><span class="dt">&gt;</span>Foo<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>对于像标题这些特殊的场景，则可以按照下面的方式添加属性：</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## Foo{ .class="Foo-Heading" }</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>这将产生如下的 HTML 标记 <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>：</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">h2</span><span class="ot"> id</span><span class="op">=</span><span class="st">"Foo"</span><span class="ot"> class</span><span class="op">=</span><span class="st">"Foo-Heading"</span><span class="dt">&gt;</span>Foo<span class="dt">&lt;/</span><span class="kw">h2</span><span class="dt">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>一般而言，仅建议使用该语法来定义 <code>id</code>、<code>class</code> 以及 <code>width</code> 这样的简单属性，<strong>不建议</strong>定义过于复杂的属性（比如 <code>styles="color: red; display: block;"</code> 就过于复杂），以免导致意料之外的问题。</p>
+</section>
+<section id="容器" class="level2">
+<h2 class="anchored" data-anchor-id="容器">容器</h2>
+<p>使用 <code>::: :::</code> 可以定义一个 <code class="language-html">&lt;div&gt;</code> 容器，结合上面提到的属性语法，可以为容器指定相应的属性。容器允许嵌套，嵌套时，定义外层容器的冒号数量（<strong>至少</strong> 3 个）需要大于内层。</p>
+<p>例如，下面的代码定义了一个栏目块（<code>class="columns"</code>），其中包含了三栏文本（<code>class="column"</code>）。</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>:::: { #custom-block .columns width="200" }</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>::: { .column }</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">### 第一栏</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>第一栏</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>第一栏</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>第一栏</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>::: { .column }</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">### 第二栏</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>第二栏</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>第二栏</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>第二栏</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>::: { .column }</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="fu">### 第三栏</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>第三栏</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>第三栏</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>第三栏</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>::::</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><code>columns</code> 和 <code>column</code> 均是本 Markdown 扩展中预定义的 CSS 类，用于实现分栏效果。因此，上面的代码可以实现如下的效果：</p>
+<div id="custom-block" class="columns" width="200">
+<div class="column">
+<section id="第一栏" class="level3">
+<h3 class="anchored" data-anchor-id="第一栏">第一栏</h3>
+<p>第一栏</p>
+<p>第一栏</p>
+<p>第一栏</p>
+</section>
+</div><div class="column">
+<section id="第二栏" class="level3">
+<h3 class="anchored" data-anchor-id="第二栏">第二栏</h3>
+<p>第二栏</p>
+<p>第二栏</p>
+<p>第二栏</p>
+</section>
+</div><div class="column">
+<section id="第三栏" class="level3">
+<h3 class="anchored" data-anchor-id="第三栏">第三栏</h3>
+<p>第三栏</p>
+<p>第三栏</p>
+<p>第三栏</p>
+</section>
+</div>
+</div>
+</section>
+<section id="代码高亮" class="level2">
+<h2 class="anchored" data-anchor-id="代码高亮">代码高亮</h2>
+<section id="内联代码" class="level3">
+<h3 class="anchored" data-anchor-id="内联代码">内联代码</h3>
+<p>可以通过为内联代码块附加属性的方式来高亮内联代码块，例如：</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="in">`p { color: red; }`</span>{ .language-css }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>效果如下：</p>
+<p><code class="language-css">p { color: red; }</code></p>
 <p><a href="https://macrohard.fun/">Mix inline <code>code</code> with ordinary text</a></p>
-<p><del>A</del> <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<blockquote class="blockquote">
-<p>ABCDE - Foo - Bar $ a &gt; b $</p>
-</blockquote>
-<p>This is a inline equation: <span class="math inline">\(y = \boldsymbol{w}^\mathsf{T}\boldsymbol{x}+b\)</span>. Here’s another one <span class="math inline">\(f'(x) = \frac{\mathrm{d}y}{\mathrm{d}x}\)</span>.</p>
-<p>And this is a block equation:</p>
+<p>若要在内联代码块中使用反引号 <code>`</code>，则需要像下面这样使用<strong>至少</strong>两个反引号作为限定符，并且在反引号与限定符相邻的情况下需要在反引号与限定符之间添加空白字符：</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="in">`` ` ``</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>若内联代码块中的反引号连续出现的最大次数为 <span class="math inline">\(N\)</span>，则外层需要<strong>至少</strong> <span class="math inline">\(N + 1\)</span> 个反引号作为限定符，例如：</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="in">```` ``` ````</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>这将产生：<code>```</code>。</p>
+</section>
+<section id="代码块" class="level3">
+<h3 class="anchored" data-anchor-id="代码块">代码块</h3>
+<p>除了基本的高亮，还可以通过附加属性 <code>code-line-numbers</code> 来指定需要<strong>强调</strong>的行号，例如：</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="in">```c { code-line-numbers="1-2,5,7" }</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> b <span class="op">=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>foo<span class="op">();</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>bar<span class="op">();</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">/*---------------*/</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>assert<span class="op">(</span>a <span class="op">!=</span> b<span class="op">);</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">/*===============*/</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="pp">#ifdef _DEBUG</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">"hello, world!"</span><span class="op">);</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>可以实现如下效果：</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource c number-lines code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="dt">int</span> a <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="dt">int</span> b <span class="op">=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a>foo<span class="op">();</span></span>
+<span id="cb10-5"><a href="#cb10-5"></a>bar<span class="op">();</span></span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="co">/*---------------*/</span></span>
+<span id="cb10-7"><a href="#cb10-7"></a>assert<span class="op">(</span>a <span class="op">!=</span> b<span class="op">);</span></span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="co">/*===============*/</span></span>
+<span id="cb10-9"><a href="#cb10-9"></a><span class="pp">#ifdef _DEBUG</span></span>
+<span id="cb10-10"><a href="#cb10-10"></a>printf<span class="op">(</span><span class="st">"hello, world!"</span><span class="op">);</span></span>
+<span id="cb10-11"><a href="#cb10-11"></a><span class="pp">#endif</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>若设置 <code>code-line-numbers="true"</code>，则对所有行应用强调效果。</p>
+<p>若要在代码块中使用 <code>```</code>，则代码块限定符中的反引号<strong>至少</strong>需要 4 个，以此类推，若代码块中反引号连续出现次数最大值为 <span class="math inline">\(N\)</span>，则代码块限定符中的反引号<strong>至少</strong>需要 <span class="math inline">\(N + 1\)</span> 个。</p>
+</section>
+</section>
+<section id="公式" class="level2">
+<h2 class="anchored" data-anchor-id="公式">公式</h2>
+<p>本扩展支持使用 <code>$...$</code>（<strong>推荐</strong>）及 <code>\(...\)</code> 作为行内公式定界符，<code>$$...$$</code>（<strong>推荐</strong>）及 <code>\[...\]</code> 作为块级公式定界符。</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 30%">
@@ -177,50 +319,20 @@ y = \boldsymbol{w}^\mathsf{T}\boldsymbol{x} + b
 y = ax+b
 \end{equation}
 \]</span></p>
-<div id="custom-block" class="columns" width="200">
-<div class="column">
-<section id="column-1" class="level3">
-<h3 class="anchored" data-anchor-id="column-1">Column 1</h3>
-<p>第一栏</p>
-<p>第一栏</p>
-<p>第一栏</p>
-</section>
-</div><div class="column">
-<section id="column-2" class="level3">
-<h3 class="anchored" data-anchor-id="column-2">Column 2</h3>
-<p>第二栏</p>
-<p>第二栏</p>
-<p>第二栏</p>
-</section>
-</div><div class="column">
-<section id="column-3" class="level3">
-<h3 class="anchored" data-anchor-id="column-3">Column 3</h3>
-<p>第三栏</p>
-<p>第三栏</p>
-<p>第三栏</p>
-</section>
-</div>
-</div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./doro-maodie.gif" class="img-fluid figure-img"></p>
+<p><img src="./doro-maodie.gif" class="center img-fluid figure-img"></p>
 <figcaption>普通文本 <code>code</code> <span class="math inline">\(f\left(x\right)\)</span></figcaption>
 </figure>
 </div>
-</section>
-<section id="B" class="level2">
-<h2 class="anchored" data-anchor-id="B">Section B</h2>
-<p>Pellentesque lacinia ante risus, ac pharetra ex lacinia ac. Nulla vel tellus lectus. Nam at eleifend elit. Suspendisse porta augue neque, a lobortis tellus malesuada non. Nunc a congue lorem. Nam arcu lacus, tincidunt faucibus ipsum congue, laoreet posuere lectus. Vestibulum eleifend lacus nec erat laoreet mollis. Pellentesque facilisis ex vel ligula ultrices malesuada. Donec eget nisi laoreet, cursus ex vel, faucibus massa. Fusce lacinia dictum odio, ut rhoncus tortor eleifend non. Cras ullamcorper varius diam eget malesuada. Quisque iaculis, justo in euismod viverra, orci neque consequat massa, consectetur faucibus risus ligula ac sem. In vel lacus justo. Donec bibendum quam sit amet diam pulvinar placerat. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
-<p>Quisque mi augue, mollis non ipsum vulputate, porta maximus lacus. Donec condimentum tempor tellus, congue rhoncus diam semper sed. Pellentesque non mattis quam. Mauris maximus tempus mauris, vitae gravida est porttitor ac. In tellus sapien, accumsan et diam vel, gravida mattis lacus. Etiam mi dui, pulvinar in finibus quis, vulputate pharetra justo. Vivamus id faucibus magna. In hac habitasse platea dictumst. Quisque id rutrum elit, ac volutpat urna. Phasellus id auctor justo. Maecenas vitae dictum purus, vitae sagittis lorem. Vivamus condimentum, ante a blandit consectetur, dolor massa fringilla lacus, quis accumsan neque arcu ac eros. Cras pretium maximus tellus ac congue.</p>
-<p>Aenean dictum lacus finibus suscipit hendrerit. In sollicitudin sapien sed quam porta laoreet. Duis pharetra congue ex vitae efficitur. Cras mattis eleifend sodales. Nam imperdiet, orci sed porttitor mattis, velit urna venenatis ligula, vel varius ex tortor ac lacus. Mauris fermentum, velit eget dictum sagittis, dui sapien placerat tortor, in luctus tellus lorem sit amet nunc. Nam consequat est non dignissim suscipit. Quisque vitae ex non libero posuere lacinia. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec ac eros eu ex vulputate sollicitudin. Pellentesque eleifend, sem at aliquet dapibus, metus neque vehicula ipsum, quis mollis nisl ligula nec lectus. Aenean fermentum est vulputate, finibus ipsum sit amet, commodo ligula. Nam tincidunt luctus felis nec semper. Proin eget posuere erat, et auctor purus.</p>
-<p>Nullam quam magna, malesuada vel consequat ac, ultrices a tellus. Sed molestie ultricies ligula vitae tempor. Nunc cursus orci id mollis lacinia. Aenean interdum mauris vel felis aliquet fermentum. Etiam vulputate nisl vitae nunc pharetra, at dictum diam commodo. Aliquam risus ex, imperdiet a turpis eget, feugiat molestie neque. Suspendisse dui leo, convallis eget molestie vel, finibus sit amet sapien. Proin maximus non nunc eu commodo. Aliquam et eros vel tellus lobortis dignissim sit amet in massa. Donec sed arcu erat. Nunc semper est vel nunc congue, iaculis dictum erat venenatis.</p>
 </section>
 
 
 <div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1"><p>Hello!<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>该特性与 R Markdown 的行为不同，R Markdown 中仅支持使用 <code>[Foo]{.underline}</code> 来实现下划线。在标准（非扩展）的 Markdown 语法中 <code>_Foo_</code> 将会产生斜体的 <em>Foo</em>，而 <code>*Foo*</code> 已经具有一样的功能，故这里决定覆盖标准 Markdown 的行为，提供一种更加简便的产生下划线的扩展语法。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>在不显式为标题指定 <code>id</code> 属性的情况下，本扩展将为标题自动提供 <code>id</code> 属性，并生成锚点元素，方便在页内跳转。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main>
 <!-- /main column -->

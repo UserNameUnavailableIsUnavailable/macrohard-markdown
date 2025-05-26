@@ -1,8 +1,1 @@
-# A
-
-> ABCDE
-> - Foo
-> - Bar
-> $ a > b $
-
-# B
+[Foo]
