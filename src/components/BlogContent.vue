@@ -56,8 +56,6 @@ fetch(json_url).then((response) => {
   })
 })
 
-
-
 </script>
 <style lang="scss">
 @use "@/styles/CustomContainer.scss";
