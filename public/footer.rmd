@@ -1,0 +1,19 @@
+:::::{.center}
+::::{.columns}
+:::{.column}
+![](/footer/工信部.ico){width="20px"} [苏 ICP 备 2023037770 号-1](https://beian.miit.gov.cn)
+:::
+:::{.column}
+![](/footer/公安.ico){width="20px"} [苏公网安备 32048202000362 号](https://www.beian.gov.cn/portal/registerSystemInfo?recordcode=32048202000362)
+:::
+:::{.column}
+![](/footer/mail.ico){width="20px"} [admin@macrohard.fun](mailto:admin@macrohard.fun)
+:::
+:::{.column}
+![](/footer/creative-commons-cc.svg){width="20px"}
+![](/footer/creative-commons-by.svg){width="20px"}
+![](/footer/creative-commons-nc.svg){width="20px"}
+[CC-BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)
+:::
+::::
+:::::

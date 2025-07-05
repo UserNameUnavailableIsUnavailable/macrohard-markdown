@@ -49,13 +49,13 @@ export default class MathRenderer {
       document.body.appendChild(script)
     })
   }
-  public async render_all() {
+  public async render_all(params?: any) {
     await this.load_promise_
     .then(async () => {
       if (this.options_.type === "MathJax3") {
         await window.MathJax.typesetPromise().then(() => {
           console.log("Math rendering task finished")
-        })
+        });
       }
     })
     .catch(e => {

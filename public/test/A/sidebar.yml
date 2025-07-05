@@ -1,0 +1,6 @@
+sidebar:
+  children:
+    - title: ⤴︎
+      href: /../index.html
+    - title: A
+      href: /test/A/index.html

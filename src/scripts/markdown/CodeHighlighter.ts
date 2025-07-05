@@ -16,7 +16,6 @@ declare global {
 
 const cdn_root = "https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/prism/1.27.0/"
 
-// todo: 增加对插件的加载顺序的控制（拓扑排序）
 const default_plugins = new Map<number, Plugin>([
   [
     0,
@@ -140,22 +139,42 @@ export default class CodeHighlighter {
       this.promises_.push(load(p)); // 加载所有插件
     })
   }
-  async highlight_all() {
+  /**
+   * 高亮指定元素。
+   * @param e 元素
+   */
+  async highlight(e: Element) {
+    Promise.all(this.promises_)
+    .then(() => {
+      window.Prism.highlightElement(e);
+    });
+  }
+  /**
+   * 高亮所有元素。
+   * @param e 开始高亮的根元素，若缺省则默认为 `document.body`。
+   */
+  async highlight_all(e?: Element) {
+    if (!e) {
+      e = document.body;
+    }
     Promise.all(this.promises_)
       .then(() => {
-        document.querySelectorAll("code[class*=language-]").forEach((code_block) => {
-          window.Prism.highlightElement(code_block)
+        e.querySelectorAll("code[class*=language-]").forEach((code_block) => {
+          window.Prism.highlightElement(code_block);
         });
       })
       .catch(e => {
-        console.error(e)
+        console.error(e);
       })
   }
+  /**
+   * 保持与 R Markdown 兼容性。
+   */
   keep_compatibility_with_rmd() {
     // R Markdown 中使用 code-line-numbers="true" 来显示代码行号
     // 使用 code-line-numbers="1-2,3,4,5" 来高亮指定行
     document.querySelectorAll("pre > code").forEach(e => {
-      const code_line_numbers = e.getAttribute("code-line-numbers")?.trim() ?? ""
+      const code_line_numbers = e.getAttribute("code-line-numbers")?.trim() ?? "";
       if (code_line_numbers === "true") {
         (e.parentNode as HTMLPreElement).classList.add("line-numbers");
       } else if (code_line_numbers?.match(/^(?:\d+(?:-\d+)?)(?:,\d+(?:-\d+)?)*$/)) { // 匹配高亮指定行的模式串

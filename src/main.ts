@@ -1,4 +1,5 @@
 import { createApp } from 'vue';
-import __MAIN__ from '@/main.vue';
+import __MAIN__ from '@/App.vue';
 
-createApp(__MAIN__).mount('#__MAIN__');
+const main = createApp(__MAIN__)
+main.mount('#__MAIN__');

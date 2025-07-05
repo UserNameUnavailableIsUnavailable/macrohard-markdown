@@ -1,0 +1,16 @@
+format: blog
+sidebar:
+  children:
+    - title: ⤴︎
+      href: /../index.html
+    - title: 基于 Markdown-It 的 R Markdown 扩展语法实现（部分）
+      href: /index.html
+      children:
+        - title: 测试章节
+          href: /test/index.html
+          children:
+            - title: 测试章节 A
+              href: /test/A/index.html
+            - title: 测试章节 B
+              href: /test/B/index.html
+          

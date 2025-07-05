@@ -1,13 +1,8 @@
-$background-color: #222222;
-$text-color: #ffffff;
-$text-color: #ffffff;
+$main-font-size: 18px;
+$background-color: #1A1A1A;
+$text-color: #f3f3f3;
 
 :root {
-  --background-color: white;
-  --text-color: black;
-}
-
-.dark-mode {
   --background-color: $background-color;
   --text-color: $text-color;
 }
@@ -18,27 +13,79 @@ body {
   transition: 0.3s ease-in-out;
 }
 
+.Content h1 {
+  font-size: $main-font-size + 20px;
+}
+
+.Content h2 {
+  font-size: $main-font-size + 16px;
+}
+
+.Content h3 {
+  font-size: $main-font-size + 12px;
+}
+
+.Content h4 {
+  font-size: $main-font-size + 8px;
+}
+
+.Content h4 {
+  font-size: $main-font-size + 4px;
+}
+.Content h5
+.Content h6
+.Content p {
+  font-size: $main-font-size;
+}
+
 /* 小节标题后跟随的锚点元素，默认处于隐藏状态 */
-h1 .header-anchor,
-h2 .header-anchor,
-h3 .header-anchor,
-h4 .header-anchor,
-h5 .header-anchor,
-h6 .header-anchor {
+.Content h1 .header-anchor,
+.Content h2 .header-anchor,
+.Content h3 .header-anchor,
+.Content h4 .header-anchor,
+.Content h5 .header-anchor,
+.Content h6 .header-anchor {
     visibility: hidden;
     text-decoration: none;
 }
 
 /* 指针悬停在小节标题上时，其后跟随的锚点元素变为可见 */
-h1:hover .header-anchor,
-h2:hover .header-anchor,
-h3:hover .header-anchor,
-h4:hover .header-anchor,
-h5:hover .header-anchor,
-h6:hover .header-anchor {
+.Content h1:hover .header-anchor,
+.Content h2:hover .header-anchor,
+.Content h3:hover .header-anchor,
+.Content h4:hover .header-anchor,
+.Content h5:hover .header-anchor,
+.Content h6:hover .header-anchor {
     visibility: visible;
 }
 
 .center {
   text-align: center;
+}
+
+[width] {
+  width: width;
+}
+
+[height] {
+  height: height;
+}
+
+.left {
+  text-align: left;
+}
+
+.center {
+  text-align: center;
+}
+
+.right {
+  text-align: right;
+}
+
+div:has(> blockquote) {
+  background-color: gray;
+  margin: 10px auto;
+  padding: 15px;
+  border-radius: 5px;
 }

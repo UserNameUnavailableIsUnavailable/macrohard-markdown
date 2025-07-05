@@ -1,0 +1,53 @@
+.BlogSidebar {
+  position: sticky;
+  width: 250px;
+  overflow-y: auto;
+  padding: 15px;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  background-color: #222222;
+  border-right: 1px solid #ddd;
+}
+
+.BlogSidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.BlogSidebar li {
+  margin-bottom: 8px;
+}
+
+.BlogSidebar a {
+  text-decoration: none;
+  color: white;
+}
+
+.BlogSidebar a.Activated {
+  color: green;
+}
+
+.BlogSidebarChevron {
+  user-select: none;
+  position: absolute;
+  right: 5px;
+  font-size: smaller;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.BlogSidebarChevron::before {
+  transform: rotate(0deg);
+  content: "⮚";
+}
+
+.BlogSidebarChevron.Expanded::before {
+  transform: rotate(90deg);
+  content: "⮛";
+}
+
+.ChevronToggle {
+  cursor: pointer;
+  margin-left: 5px;
+}

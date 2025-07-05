@@ -6,6 +6,14 @@ export default function (md: MarkdownIt) {
     md.renderer.rules.image = (tokens: Token[], idx: number, options: Options, env: unknown, self: Renderer) => {
         const token = tokens[idx];
         const src = token.attrs ? token.attrs[token.attrIndex("src")][1] : "";
+        const alt = token.content;
+        if (!alt.trim()) {
+          const attr_list = new Array<string>();
+          token.attrs?.forEach(e => {
+            attr_list.push(`${e[0]}="${e[1]}"`);
+          });
+          return `<img ${attr_list.join(' ')} />\n`;
+        }
         // 渲染 token 的子元素用 renderInline
         const caption_html = self.renderInline(token.children as Token[], options, env)
         // HTML 格式的字符串不能直接存入 <img> 的 alt 属性，否则标签将会被截断！
