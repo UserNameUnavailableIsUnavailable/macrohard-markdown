@@ -40,6 +40,7 @@ const DELIM_UNITS = ['`']
 
 // 重新实现了 escapedSplit 函数，对表格中出现的内联代码、数学公式进行专门处理
 function escapedSplit(str: string) {
+  console.log(str);
   const ret: string[] = []
   let cell_item_begin = 0;
   let cell_item_end = 0;
@@ -66,9 +67,9 @@ function escapedSplit(str: string) {
         // 如果没有找到匹配的定界符，直接跳出循环
         break;
       }
-      cell_item_end += pair[1].length // skip
-    } else if (str.charAt(cell_item_end) === '\\') {
-      cell_item_end++;
+      cell_item_end += pair[1].length;
+    } else if (str.charAt(cell_item_end) === '\\') { // 转义下一个字符
+      cell_item_end += 2;
     } else {
       cell_item_end++;
     }

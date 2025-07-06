@@ -95,6 +95,7 @@ const footer_html = computed(() => {
 .Content {
   margin-left: 5px;
   grid-area: content;
+  overflow: auto;
 }
 
 .Footer {

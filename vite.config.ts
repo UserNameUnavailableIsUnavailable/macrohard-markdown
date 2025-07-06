@@ -31,10 +31,10 @@ function generateJSON(file_path: string) {
   assert(!path.isAbsolute(file_path));
   assert(file_path.endsWith(".json")); // 必须是对 json 的请求
   file_path = file_path.replace(/json$/, "rmd"); // 用于获取 rmd 文件
-  let root = process.cwd();
-  if (!isFile(file_path)) {
-    root = path.join(root, "public");
-  }
+  const root = process.cwd();
+  // if (!isFile(file_path)) {
+  //   root = path.join(root, "public");
+  // }
   file_path = path.normalize(path.join(root, file_path));
   let json: { content: string, sidebar?: string, footer?: string } = {
     content: "---\ntitle: 404 Not Found\n---"
@@ -80,8 +80,8 @@ function middleware() {
           return next();
         }
         const url = new URL(`http://${process.env.HOST ?? 'localhost'}${req.url}`);
-        const rel_path = url.pathname.slice(1); // 文件相对路径
-        if (isDirectory(`.${path.posix.sep}${rel_path}`)) {
+        const rel_path = path.join("public", url.pathname.slice(1)); // 文件相对路径
+        if (isDirectory(rel_path)) {
             url.pathname = path.posix.join(url.pathname, "index.html");
             res.writeHead(302, { Location: url.pathname + url.search }); // 重定向，同时保留参数
             return res.end();

@@ -1,7 +1,6 @@
 import type MarkdownIt from "markdown-it";
 import type { Token, Options, Renderer } from "markdown-it/index.js";
 
-
 export default function (md: MarkdownIt) {
     md.renderer.rules.image = (tokens: Token[], idx: number, options: Options, env: unknown, self: Renderer) => {
         const token = tokens[idx];
@@ -29,7 +28,7 @@ export default function (md: MarkdownIt) {
             attr_list.push(`${e[0]}="${e[1]}"`);
           }
         });
-        const ret = `<figure ${attr_list.join(' ')}>\n<img src="${src}" alt="${p.textContent}" />\n<figcaption>${caption_html}</figcaption>\n</figure>`;
+        const ret = `<figure ${attr_list.join(' ')}>\n<img src="${src}" alt="${p.textContent}" ${attr_list.join(' ')} />\n<figcaption>${caption_html}</figcaption>\n</figure>`;
         return ret;
     };
 }

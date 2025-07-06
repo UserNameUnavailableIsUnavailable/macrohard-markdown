@@ -10,7 +10,7 @@
 <script lang="ts" setup>
 import YAML from "js-yaml";
 import ArticleLayout from '@/components/blog/ArticleLayout.vue';
-import { computed, ref } from 'vue';
+import { computed, onUpdated, ref } from 'vue';
 import ImageViewer from './components/ImageViewer.vue';
 import axios from 'axios';
 import type { Sidebar } from "./scripts/markdown/Sidebar";
@@ -56,6 +56,21 @@ axios({
     article_list.value = inline_mt.sidebar;
     footer_markdown.value = inline_mt.footer;
   }
+});
+
+onUpdated(() => {
+  document.body.querySelectorAll("[width]").forEach(e => {
+    const width = e.getAttribute("width");
+    if (width) {
+        (e as HTMLElement).style.setProperty("width", width);
+    }
+  });
+  document.body.querySelectorAll("[height]").forEach(e => {
+    const height = e.getAttribute("height");
+    if (height) {
+      (e as HTMLElement).style.setProperty("height", height);
+    }
+  });
 });
 
 </script>
