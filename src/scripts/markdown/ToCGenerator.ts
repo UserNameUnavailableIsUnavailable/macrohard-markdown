@@ -18,6 +18,7 @@ export default function (md: MarkdownIt) {
         const inlineToken = tokens[i + 1];
 
         // 将 Markdown 渲染为 HTML
+        // @ts-expect-error state.options
         const rendered = renderer.render([inlineToken], state.options, state.env);
 
         // 解析 HTML

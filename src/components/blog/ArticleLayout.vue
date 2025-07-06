@@ -1,7 +1,7 @@
 <template>
   <article class="BlogLayout">
-    <nav class="SideNav">
-      <ArticleSidebar v-if="props.sidebar" :items="props.sidebar" />
+    <nav class="SideNav" v-if="props.sidebar">
+      <ArticleSidebar :items="props.sidebar" />
     </nav>
     <nav v-if="toc.length > 0" class="SideToC">
       <ArticleTableOfContents :items="toc" />
@@ -41,6 +41,12 @@ watch(() => props.content_markdown, (content_markdown) => {
   immediate: true
 });
 
+watch(() => props.sidebar, (s) => {
+  if (s) {
+
+  }
+});
+
 const footer_html = computed(() => {
   if (!props.footer_markdown) return "";
   BlogParser.parse(props.footer_markdown);
@@ -55,9 +61,15 @@ const footer_html = computed(() => {
   grid-template-rows: 1fr auto;
   grid-template-areas:
     "nav content toc"
-    "nav footer toc";
+    "footer footer footer";
   min-height: 100vh;
   gap: 1px;
+}
+
+.BlogLayout.NoSidebar {
+  grid-template-areas:
+    "content toc"
+    "footer footer";
 }
 
 .SideNav {
@@ -71,7 +83,7 @@ const footer_html = computed(() => {
   color: var(--text-color);
   padding-left: 5px;
   padding-right: 10px;
-  border-right: 2px solid whitesmoke;
+  // border-right: 2px solid whitesmoke;
   box-sizing: border-box;
   overflow: auto;
 }
@@ -87,7 +99,7 @@ const footer_html = computed(() => {
   color: var(--text-color);
   padding-left: 10px;
   padding-right: 5px;
-  border-left: 2px solid whitesmoke;
+  // border-left: 2px solid whitesmoke;
   box-sizing: border-box;
   overflow: auto;
 }

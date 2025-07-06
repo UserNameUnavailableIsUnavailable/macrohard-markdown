@@ -13,4 +13,4 @@ sidebar:
               href: /test/A/index.html
             - title: 测试章节 B
               href: /test/B/index.html
-          
+footer: /footer.rmd

@@ -203,10 +203,12 @@ printf("hello, world!");
 
 本扩展支持使用 `$...$`（**推荐**）及 `\(...\)` 作为行内公式定界符，`$$...$$`（**推荐**）及 `\[...\]` 作为块级公式定界符。
 
+:::{.center}
 |theorem (EN, left aligned)|定理（中文，居中）|formula (right-aligned)|
 |:---|:---:|---:|
 |Newton's Law II|牛顿第二定律|$\boldsymbol{F} = m\boldsymbol{a}$|
 |Law of Universal Gravitation|万有引力定律|$\boldsymbol{F} = G\frac{Mm}{\|r\|^3}\boldsymbol{r}$|
+:::
 
 $$\boldsymbol{e}_r = \frac{\boldsymbol{r}}{\|\boldsymbol{r}\|}.$$
 
