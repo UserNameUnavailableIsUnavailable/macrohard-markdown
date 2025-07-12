@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
 import Content from './ArticleContent.vue';
-import { BlogParser, type TableOfContents } from '@/scripts/markdown/Parse';
+import { BlogParser, type TableOfContents } from '@/scripts/markdown/Parser';
 import ArticleSidebar from './ArticleSidebar.vue';
 import ArticleTableOfContents from "./ArticleTableOfContents.vue";
 import { computed, ref, watch } from 'vue';
@@ -61,7 +61,7 @@ const footer_html = computed(() => {
   grid-template-rows: 1fr auto;
   grid-template-areas:
     "nav content toc"
-    "footer footer footer";
+    "nav footer toc";
   min-height: 100vh;
   gap: 1px;
 }
@@ -69,7 +69,7 @@ const footer_html = computed(() => {
 .BlogLayout.NoSidebar {
   grid-template-areas:
     "content toc"
-    "footer footer";
+    "footer toc";
 }
 
 .SideNav {

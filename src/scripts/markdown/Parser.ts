@@ -42,7 +42,7 @@ export class Parser {
   private toc_: TableOfContents = [];
 
   public constructor(type: "blog" | "presentation") {
-    this.parser_ = new MarkdownIt();
+    this.parser_ = new MarkdownIt({ html: true });
     // 保护数学公式
     const math_renderer = new MathHandler({
       allow_white_space_padding: true,

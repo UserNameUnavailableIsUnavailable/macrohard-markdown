@@ -8,7 +8,7 @@ from flask_cors import CORS
 
 SCRIPT_ROOT = pathlib.Path(__file__).parent # 脚本文件所在路径
 SERVER_ROOT = SCRIPT_ROOT / "dist" # 服务器根目录
-DOCUMENT_ROOT = SCRIPT_ROOT / "public" # 文档路径
+DOCUMENT_ROOT = SCRIPT_ROOT.parent / "macrohard-blog" # 文档路径
 
 print(f"server root: {SERVER_ROOT}")
 print(f"document root: {DOCUMENT_ROOT}")
@@ -90,4 +90,4 @@ def handle(url_path=''):
     return "File Not Found", 404
 
 if __name__ == "__main__":
-    app.run(port=8080, debug=True)
+    app.run(port=8080, debug=False)

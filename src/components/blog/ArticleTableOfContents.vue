@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { TableOfContents as TableOfContents } from '@/scripts/markdown/Parse';
+import type { TableOfContents as TableOfContents } from '@/scripts/markdown/Parser';
 import Item from "@/components/blog/ArticleTableOfContentsItem.vue";
 import { onMounted, onUnmounted, ref } from 'vue';
 

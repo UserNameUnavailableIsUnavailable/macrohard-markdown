@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { TableOfContentsItem } from '@/scripts/markdown/Parse';
+import type { TableOfContentsItem } from '@/scripts/markdown/Parser';
 import Item from "@/components/blog/ArticleTableOfContentsItem.vue";
 
 const props = defineProps<{

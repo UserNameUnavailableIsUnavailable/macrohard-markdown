@@ -25,7 +25,7 @@
 import { computed, defineProps, onMounted, ref } from 'vue';
 import { type SidebarItem } from '@/scripts/markdown/Sidebar';
 import Item from "@/components/blog/ArticleSidebarItem.vue";
-import { BlogParser } from '@/scripts/markdown/Parse';
+import { BlogParser } from '@/scripts/markdown/Parser';
 
 const props = defineProps<{ item: SidebarItem }>();
 
