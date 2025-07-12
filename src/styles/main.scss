@@ -13,6 +13,10 @@ body {
   transition: 0.3s ease-in-out;
 }
 
+html {
+  font-size: $main-font-size;
+}
+
 .Content h1 {
   font-size: $main-font-size + 20px;
 }
@@ -105,3 +109,7 @@ tr:nth-child(0) {
   background-color: gray;
 }
 
+a {
+  color: #1E90FF;
+  text-decoration: underline;
+}

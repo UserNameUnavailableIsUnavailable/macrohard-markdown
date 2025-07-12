@@ -5,10 +5,12 @@ import os
 from urllib.parse import urljoin
 from flask import Flask, send_file, redirect, request
 from flask_cors import CORS
+from bs4 import BeautifulSoup
+import re
 
 SCRIPT_ROOT = pathlib.Path(__file__).parent # 脚本文件所在路径
-SERVER_ROOT = SCRIPT_ROOT / "dist" # 服务器根目录
-DOCUMENT_ROOT = SCRIPT_ROOT.parent / "macrohard-blog" # 文档路径
+SERVER_ROOT = SCRIPT_ROOT / "../macrohard-markdown" # 服务器根目录
+DOCUMENT_ROOT = SCRIPT_ROOT / "../macrohard-blog" # 文档路径
 
 print(f"server root: {SERVER_ROOT}")
 print(f"document root: {DOCUMENT_ROOT}")
@@ -34,12 +36,23 @@ def get_parent_path(path: pathlib.Path):
 def generate_json(json_path: pathlib.Path):
     assert(json_path.is_absolute())
     assert(json_path.suffix == ".json") # 必须是对 json 文件的请求
-    obj: dict[str, str | None] = { "content": "---\ntitle: 404 Not Found\n---" }
+    obj: dict[str, str | None] = { "title": "404 Not Found", "content": "😱😱😱😱😱" } # 默认值
     rmd_path = json_path.with_suffix(".rmd") # 后缀替换为 rmd
     if (rmd_path.is_file()): # 文件存在
+        obj["title"] = "Untitled" # 默认标题
         with rmd_path.open(mode='r', encoding='utf-8') as file:
             content = file.read() # 读取 rmd 文件
-            obj["content"] = content
+            obj["content"] = content # 默认内容为 rmd 文件内容
+            match = re.search(r'^\s*---([\s\S]*?)---\s*', content)
+            if match:
+                metadata_str = match[1].strip()
+                content = content[match.end():].strip() # 去除元数据
+                try:
+                    metadata = yaml.safe_load(metadata_str) or {}
+                    obj = obj | metadata # 合并元数据
+                except yaml.YAMLError:
+                    pass
+            obj["content"] = f"# {obj['title']}\n{content}"
     # 逐级读取 metadata 文件并合并
     cd = rmd_path.parent # 从 rmd 所在的目录开始
     while True:
@@ -64,8 +77,7 @@ def generate_json(json_path: pathlib.Path):
                 obj["footer"] = footer
         else:
             obj["footer"] = None
-    ret = json.dumps(obj)
-    return ret
+    return obj
 
 app = Flask(__name__)
 CORS(app)
@@ -77,10 +89,24 @@ def handle(url_path=''):
     if requested_path.is_dir(): # 请求的是某个路径
         redirect_path = str(pathlib.Path(url_path) / "index.html")
         return redirect(f"/{redirect_path}", code=302) # 重定向到 index.html
-    elif (requested_path.is_file()):
+    elif (requested_path.is_file()): # 文件已经存在
         return send_file(str(requested_path))
-    elif requested_path.suffix == ".json": # 请求 json 文件
-        return generate_json(requested_path)
+    elif requested_path.suffix == ".html": # 请求某个不存在的 html 文件
+        html_template = SERVER_ROOT / "index.html"
+        if html_template.is_file():
+            with html_template.open(mode='r', encoding='utf-8') as file:
+                content = file.read()
+                soup = BeautifulSoup(content, 'html.parser')
+                script = soup.new_tag("script", id="__metadata__", type="application/json") # 创建 JSON 脚本标签，保存 JSON 元数据
+                soup.find("head").append(script)
+                metadata = generate_json(requested_path.with_suffix('.json'))
+                script.string = json.dumps(metadata, ensure_ascii=False)
+                title = soup.find("title")
+                if title is None:
+                    title = soup.new_tag("title")
+                    soup.find("head").append(title)
+                title.string = metadata.get("title", "Macrohard")
+                return str(soup)
     # 文档目录下没有找到相应资源，在服务器目录下查找
     requested_path = SERVER_ROOT / url_path
     if requested_path.is_file():

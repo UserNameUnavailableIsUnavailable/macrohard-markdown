@@ -27,6 +27,6 @@ index_files
 *.njsproj
 *.sln
 *.sw?
-
+*.tar
 *.tsbuildinfo
 /.venv/

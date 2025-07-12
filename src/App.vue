@@ -8,20 +8,10 @@
   />
 </template>
 <script lang="ts" setup>
-import YAML from "js-yaml";
 import ArticleLayout from '@/components/blog/ArticleLayout.vue';
-import { computed, onUpdated, ref } from 'vue';
 import ImageViewer from './components/ImageViewer.vue';
-import axios from 'axios';
 import type { Sidebar } from "./scripts/markdown/Sidebar";
-
-const path_name = window.location.pathname;
-
-// 对于以 pathname 对应于目录的情况，由后端服务器负责重定向到相应目录下的 index.html
-// 因此 pathname 始终指向 .html 文件
-const url = computed(() => {
-  return path_name.replace(/html$/, "json"); // 文件后缀替换为 json
-});
+import { onUpdated, ref } from 'vue';
 
 type Metadata = {
   format: "blog" | "presentation" | undefined, // 格式类型
@@ -36,27 +26,15 @@ const content_markdown = ref("");
 const article_list = ref<Sidebar>();
 const footer_markdown = ref<string|undefined>("");
 
-axios({
-  method: "get",
-  url: url.value,
-})
-.then(response => {
-  const mt = response.data;
-  format.value = mt.format;
-  article_list.value = mt.sidebar;
-  footer_markdown.value = mt.footer;
-  if (!mt) return;
-  const regex = /^\s*---([\s\S]*?)---\s*/;
-  const match = mt.content.match(regex);
-  if (match) {
-    let inline_mt = YAML.load(match[1]) as Metadata;
-    inline_mt = { ...mt, ...inline_mt };
-    format.value = inline_mt.format;
-    content_markdown.value = `# ${inline_mt.title}\n${inline_mt.content.slice(match[0].length)}`;
-    article_list.value = inline_mt.sidebar;
-    footer_markdown.value = inline_mt.footer;
-  }
-});
+const metadata_tag = document.getElementById("__metadata__");
+if (metadata_tag) {
+  const text_content = metadata_tag.textContent ? metadata_tag.textContent : "{}";
+  const metadata = JSON.parse(text_content) as Metadata;
+  format.value = metadata.format;
+  content_markdown.value = metadata.content;
+  article_list.value = metadata.sidebar;
+  footer_markdown.value = metadata.footer;
+}
 
 onUpdated(() => {
   document.body.querySelectorAll("[width]").forEach(e => {
