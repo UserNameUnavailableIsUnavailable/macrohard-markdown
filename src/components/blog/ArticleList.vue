@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import Item from './ArticleSidebarItem.vue';
+import Item from './ArticleListItem.vue';
 import { type Sidebar } from '@/scripts/markdown/Sidebar';
 
 const props = defineProps<{

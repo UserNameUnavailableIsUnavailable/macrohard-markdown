@@ -18,7 +18,7 @@
 <script lang="ts" setup>
 import Content from './ArticleContent.vue';
 import { BlogParser, type TableOfContents } from '@/scripts/markdown/Parse';
-import ArticleSidebar from './ArticleSidebar.vue';
+import ArticleSidebar from './ArticleList.vue';
 import ArticleTableOfContents from "./ArticleTableOfContents.vue";
 import { computed, ref, watch } from 'vue';
 import { type Sidebar } from '@/scripts/markdown/Sidebar';
@@ -77,13 +77,12 @@ const footer_html = computed(() => {
   grid-area: nav;
   top: 0;
   left: 0;
-  height: 100vh;
+  height: 75vh;
   width: 300px;
   background-color: var(--background-color);
   color: var(--text-color);
   padding-left: 5px;
   padding-right: 10px;
-  // border-right: 2px solid whitesmoke;
   box-sizing: border-box;
   overflow: auto;
 }
@@ -93,15 +92,15 @@ const footer_html = computed(() => {
   grid-area: toc;
   top: 0;
   right: 0;
-  height: 100vh;
+  height: 75vh;
   width: 300px;
   background-color: var(--background-color);
   color: var(--text-color);
   padding-left: 10px;
   padding-right: 5px;
-  // border-left: 2px solid whitesmoke;
   box-sizing: border-box;
   overflow: auto;
+  margin-left: 5px;
 }
 
 .Content {
