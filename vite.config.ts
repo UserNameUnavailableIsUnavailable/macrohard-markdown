@@ -14,7 +14,7 @@ import { IncomingMessage, ServerResponse } from "node:http";
 import mime from 'mime';
 
 const SERVER_ROOT = PATH.normalize(PATH.dirname(__filename));
-const DOCUMENT_ROOT = PATH.normalize(PATH.join(SERVER_ROOT, "../macrohard-blog"));
+const DOCUMENT_ROOT = PATH.normalize(PATH.join(SERVER_ROOT, "public"));
 
 function getRelativePath(path: string) {
   if (PATH.isAbsolute(path)) {

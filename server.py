@@ -9,8 +9,8 @@ from bs4 import BeautifulSoup
 import re
 
 SCRIPT_ROOT = pathlib.Path(__file__).parent # 脚本文件所在路径
-SERVER_ROOT = SCRIPT_ROOT / "../macrohard-markdown" # 服务器根目录
-DOCUMENT_ROOT = SCRIPT_ROOT / "../macrohard-blog" # 文档路径
+SERVER_ROOT = SCRIPT_ROOT / "macrohard-markdown" # 服务器根目录
+DOCUMENT_ROOT = SCRIPT_ROOT / "macrohard-blog" # 文档路径
 
 print(f"server root: {SERVER_ROOT}")
 print(f"document root: {DOCUMENT_ROOT}")
