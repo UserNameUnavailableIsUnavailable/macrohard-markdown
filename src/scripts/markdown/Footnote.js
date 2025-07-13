@@ -19,7 +19,7 @@ function render_footnote_caption (tokens, idx/*, options, env, slf */) {
 
   if (tokens[idx].meta.subId > 0) n += `:${tokens[idx].meta.subId}`
 
-  return ` ${n} `
+  return `${n}`
 }
 
 function render_footnote_ref (tokens, idx, options, env, slf) {
@@ -29,7 +29,7 @@ function render_footnote_ref (tokens, idx, options, env, slf) {
 
   if (tokens[idx].meta.subId > 0) refid += `:${tokens[idx].meta.subId}`
 
-  return `<sup class="footnote-ref"><a href="#fn${id}" id="fnref${refid}">${caption}</a></sup>`
+  return ` <sup class="footnote-ref"><a href="#fn${id}" id="fnref${refid}">${caption}</a></sup> `
 }
 
 function render_footnote_block_open (tokens, idx, options) {
@@ -54,13 +54,14 @@ function render_footnote_close () {
   return '</li>\n'
 }
 
+const BACK_ICON = `<svg t="1752414343780" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="18105" width="1em" height="1em"><path d="M553.71 125.44H301.33c-15.26 0-27.63 12.37-27.63 27.63s12.37 27.63 27.63 27.63h252.38c145.76 0 264.62 117.34 267.08 262.53 2.53 149.42-123.71 271.72-273.15 271.72H302.31l1.17-1.12 75.18-75.18c10.79-10.79 10.79-28.29 0-39.08s-28.29-10.79-39.08 0L217.04 722.11c-10.79 10.79-10.79 28.29 0 39.08l129.27 129.27c10.79 10.79 28.29 10.79 39.08 0s10.79-28.29 0-39.08l-81.16-81.16h242.62c175.43 0 323.9-137.29 329.1-312.64 5.4-182.2-141.24-332.14-322.24-332.14z" p-id="18106" fill="#1296db"></path></svg>`
+
 function render_footnote_anchor (tokens, idx, options, env, slf) {
   let id = slf.rules.footnote_anchor_name(tokens, idx, options, env, slf)
 
   if (tokens[idx].meta.subId > 0) id += `:${tokens[idx].meta.subId}`
 
-  /* ↩ with escape code to prevent display as Apple Emoji on iOS */
-  return ` <a href="#fnref${id}" class="footnote-backref">\u21a9\uFE0E</a>`
+  return ` <a href="#fnref${id}" class="footnote-backref">${BACK_ICON}</a>`
 }
 
 export default function footnote_plugin (md) {
