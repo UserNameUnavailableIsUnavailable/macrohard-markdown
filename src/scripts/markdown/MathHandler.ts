@@ -4,6 +4,8 @@ import type { RuleInline } from "markdown-it/lib/parser_inline.mjs";
 import type { RuleBlock } from "markdown-it/lib/parser_block.mjs";
 import type { RenderRule } from "markdown-it/lib/renderer.mjs";
 
+const BACKSLASH = '\\'.charCodeAt(0);
+
 export default class MathProtector {
   private allow_whitespace_padding_: boolean;
   private inline_delimiters_: [string, string][];
@@ -51,9 +53,20 @@ export default class MathProtector {
     return (state: StateInline, silent: boolean) => {
       const start = state.pos;
       // 公式开始标记
-      const markers = options.delimiters.filter(([open]) =>
-        open === state.src.slice(start, start + open.length)
-      );
+      const markers = options.delimiters.filter(([open]) => {
+        const indicator = state.src.slice(start, start + open.length);
+        if (open === indicator) { // 开始标记匹配
+          // 回溯，检查前方是否存在转义字符
+          if (start > 0 && state.src.charCodeAt(start - 1) === BACKSLASH) { // 前面一个字符是 \
+            if (start > 1 && state.src.charCodeAt(start - 2) === BACKSLASH) { // 前面两个字符是 \\
+              return true; // \\ 对当前公式无影响
+            }
+          } else {
+            return true;
+          }
+          return false;
+        }
+      });
       if (markers.length === 0) { return false; }
       // 找到标记
       for (const [open, close] of markers) {

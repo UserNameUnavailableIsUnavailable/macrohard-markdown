@@ -11,6 +11,7 @@ type Options = {
   url: string,
   inline_indicator: string[][]
   block_indicator: string[][]
+  processEscapes: boolean // 是否处理转义字符
 }
 
 export default class MathRenderer {
@@ -18,18 +19,24 @@ export default class MathRenderer {
     type: "MathJax3",
     url: 'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/mathjax/3.2.0/es5/tex-chtml-full.js',
     inline_indicator: [['$', '$'], ['\\(', '\\)']],
-    block_indicator: [['$$', '$$'], ['\\[', '\\]']]
+    block_indicator: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
   }
   private load_promise_: Promise<void>
   constructor(options: Partial<Options>) {
-    Object.assign(this.options_, options)
+    // Object.assign(this.options_, options)
+    this.options_ = { ...this.options_, ...options } as Options;
     this.load_promise_ = new Promise<void>((resolve, reject) => {
       const script = document.createElement("script")
       if (this.options_.type === "MathJax3") {
         window.MathJax = {
+          startup : {
+            typeset: false
+          },
           tex: {
             inlineMath: this.options_.inline_indicator,
-            displayMath: this.options_.block_indicator
+            displayMath: this.options_.block_indicator,
+            processEscapes: this.options_.processEscapes
           }
         }
         script.async = true
@@ -50,13 +57,12 @@ export default class MathRenderer {
     })
   }
   public async render_all(params?: any) {
+
     await this.load_promise_
-    .then(async () => {
-      if (this.options_.type === "MathJax3") {
-        await window.MathJax.typesetPromise().then(() => {
-          console.log("Math rendering task finished")
-        });
-      }
+    .then(() => {
+      document.querySelectorAll(".math.inline, .math.block").forEach((el) => {
+        window.MathJax.typeset([el])
+      });
     })
     .catch(e => {
       console.error(e)

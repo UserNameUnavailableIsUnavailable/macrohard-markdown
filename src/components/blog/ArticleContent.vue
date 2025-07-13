@@ -20,6 +20,7 @@ const props = defineProps<{
 const body = ref("");
 watch(() => props.html, (html) => {
   body.value = html;
+  console.log(html)
   nextTick(() => {
     math_renderer.render_all();
     code_highlighter.highlight_all();
