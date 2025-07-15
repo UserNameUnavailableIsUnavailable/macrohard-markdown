@@ -22,7 +22,7 @@ type Options = {
 
 export default class CodeHighlighter {
   private promises_: Promise<void>[]
-  private cdn_root = "https://cdn.bootcdn.net/ajax/libs/prism/1.30.0/"
+  private cdn_root = "https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/prism/1.27.0/"
   private plugins_: Map<number, Plugin> = new Map<number, Plugin>([
     [
       0,

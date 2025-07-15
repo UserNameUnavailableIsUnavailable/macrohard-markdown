@@ -49,29 +49,32 @@ const content_html = computed(() => {
 });
 
 // 对于章节嵌套的情况，调整级灯片的滚动范围
-function update_nested_scroll_range() {
-  const current = Reveal.getCurrentSlide() as HTMLElement;
-  const parent = current.parentElement;
+// function update_nested_scroll_range() {
+//   const current = Reveal.getCurrentSlide() as HTMLElement;
+//   const parent = current.parentElement;
 
-  if (!parent || parent.tagName !== 'SECTION' || !parent.classList.contains('present')) return;
+//   if (!parent || parent.tagName !== 'SECTION' || !parent.classList.contains('present')) return;
 
-  const children = Array.from(parent.children);
-  const relevant = children.filter(el => {
-    return el.classList.contains('present');
-  });
+//   const children = Array.from(parent.children);
+//   const relevant = children.filter(el => {
+//     return el.classList.contains('present');
+//   });
 
-  const total_height = relevant
-    .map(el => el.scrollHeight)
-    .reduce((sum, h) => sum + h, 0);
+//   const total_height = relevant
+//     .map(el => el.scrollHeight)
+//     .reduce((sum, h) => sum + h, 0);
 
-  parent.style.height = `${total_height}px`;
-  parent.style.overflowY = total_height > window.innerHeight ? 'auto' : 'hidden';
-  parent.scrollTop = 0;
-}
+//   parent.style.maxHeight = `${window.innerHeight}px`;
+//   parent.style.height = `${total_height}px`;
+//   console.log("Total height:", total_height);
+//   console.log("Window height:", window.innerHeight);
+//   console.log("Scroll height:", parent.scrollHeight);
+//   parent.style.overflowY = total_height > window.innerHeight ? 'auto' : 'hidden';
+//   parent.scrollTop = 0;
+// }
 
 function on_fullscreen_change() {
   Reveal.layout();
-  update_nested_scroll_range();
 }
 
 const toggle_menu = ref();
@@ -107,8 +110,6 @@ onMounted(() => {
       });
       console.log(Reveal.getPlugin("menu"));
       toggle_menu.value = Reveal.getPlugin("menu").toggle; // RevealJS v4+ 的获取插件方式
-      Reveal.addEventListener('ready', update_nested_scroll_range);
-      Reveal.addEventListener('slidechanged', update_nested_scroll_range);
       document.addEventListener('fullscreenchange', on_fullscreen_change);
     } catch (error) {
       console.error(error);
@@ -117,8 +118,6 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  Reveal.removeEventListener('ready', update_nested_scroll_range);
-  Reveal.removeEventListener('slidechanged', update_nested_scroll_range);
   document.removeEventListener('fullscreenchange', on_fullscreen_change);
 });
 </script>
@@ -147,15 +146,18 @@ onUnmounted(() => {
   z-index: 0;
 }
 
-// 内容溢出时允许滚动
+// 处理幻灯片的滚动行为
+.reveal .slides section > section.past,
+.reveal .slides section > section.future {
+  height: 0 !important; // 将不可见的幻灯片高度强行置为 0，以免影响真实 scrollHeight 的计算，此方法好处是不影响切换时的动画效果
+}
+
 .reveal>.slides section {
-  overflow: auto;
+  overflow: auto; // 允许滚动
   max-height: 100%;
 }
 
-// 对于嵌套的章节，溢出时保持可见，父级章节可滚动查看其内容
 .reveal>.slides section section {
-  overflow: visible;
-  max-height: 100%;
+  overflow: visible; // 对于嵌套的幻灯片，其内容保持可见，此时父级幻灯片可以滚动查看其内容
 }
 </style>
