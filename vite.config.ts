@@ -78,7 +78,7 @@ function generateMetadata(file_path: string) {
       try {
         const metadata = YAML.load(metadata_str) as Record<string, string | null>;
         json = { ...json, ...metadata }; // 合并元数据
-        json.content = `# ${json.title}\n${json.content}`; // 将标题放在内容前面
+        json.content = `${json.content}`; // 将标题放在内容前面
       } catch {
         // 解析失败，忽略
       }

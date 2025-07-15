@@ -1,4 +1,5 @@
 type Plugin = {
+  id?: string
   dependencies: number[] | undefined
   before_load?: (() => void)
   css_url: string | undefined
@@ -14,89 +15,99 @@ declare global {
   }
 }
 
-const cdn_root = "https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/prism/1.27.0/"
-
-const default_plugins = new Map<number, Plugin>([
-  [
-    0,
-    {
-      js_url: cdn_root + "components/prism-core.min.js",
-      css_url: cdn_root + "themes/prism-tomorrow.min.css",
-      after_load: () => {
-        window.Prism.manual = true
-      }
-    } as Plugin
-  ],
-  [
-    1,
-    {
-      dependencies: [0],
-      js_url: cdn_root + "plugins/toolbar/prism-toolbar.min.js",
-      css_url: cdn_root + "plugins/toolbar/prism-toolbar.min.css"
-    } as Plugin
-  ],
-  [
-    2,
-    {
-      dependencies: [0, 1],
-      js_url: cdn_root + "plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"
-    } as Plugin
-  ],
-  [
-    3,
-    {
-      dependencies: [0, 1],
-      js_url: cdn_root + "plugins/show-language/prism-show-language.min.js"
-    } as Plugin
-  ],
-  [
-    4,
-    {
-      dependencies: [0, 1],
-      js_url: cdn_root + "plugins/line-numbers/prism-line-numbers.min.js",
-      css_url: cdn_root + "plugins/line-numbers/prism-line-numbers.min.css"
-    } as Plugin
-  ],
-  [
-    5,
-    {
-      dependencies: [0, 1],
-      js_url: cdn_root + "plugins/line-highlight/prism-line-highlight.min.js",
-      css_url: cdn_root + "plugins/line-highlight/prism-line-highlight.min.css"
-    } as Plugin
-  ],
-  [
-    6,
-    {
-      dependencies: [0, 1],
-      js_url: cdn_root + "plugins/autoloader/prism-autoloader.min.js",
-      after_load: () => {
-        window.Prism.plugins.autoloader.languages_path = cdn_root + 'components/'
-      }
-    } as Plugin
-  ],
-  [
-    7,
-    {
-      dependencies: [0],
-      js_url: cdn_root + "plugins/inline-color/prism-inline-color.min.js",
-      css_url: cdn_root + "plugins/inline-color/prism-inline-color.min.css"
-    } as Plugin
-  ]
-])
-
-
+type Options = {
+  theme?: string
+  cdn_root?: string
+}
 
 export default class CodeHighlighter {
-  private plugins_: Map<number, Plugin>
   private promises_: Promise<void>[]
-  constructor(plugins: Map<number, Plugin> = default_plugins) {
-    this.plugins_ = plugins
+  private cdn_root = "https://cdn.bootcdn.net/ajax/libs/prism/1.30.0/"
+  private plugins_: Map<number, Plugin> = new Map<number, Plugin>([
+    [
+      0,
+      {
+        id: "Core",
+        js_url: "components/prism-core.min.js",
+        css_url: "themes/prism-tomorrow.min.css",
+        after_load: () => {
+          window.Prism.manual = true
+        }
+      } as Plugin
+    ],
+    [
+      1,
+      {
+        dependencies: [0],
+        js_url: "plugins/toolbar/prism-toolbar.min.js",
+        css_url: "plugins/toolbar/prism-toolbar.min.css"
+      } as Plugin
+    ],
+    [
+      2,
+      {
+        dependencies: [0, 1],
+        js_url: "plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"
+      } as Plugin
+    ],
+    [
+      3,
+      {
+        dependencies: [0, 1],
+        js_url: "plugins/show-language/prism-show-language.min.js"
+      } as Plugin
+    ],
+    [
+      4,
+      {
+        dependencies: [0, 1],
+        js_url: "plugins/line-numbers/prism-line-numbers.min.js",
+        css_url: "plugins/line-numbers/prism-line-numbers.min.css"
+      } as Plugin
+    ],
+    [
+      5,
+      {
+        dependencies: [0, 1],
+        js_url: "plugins/line-highlight/prism-line-highlight.min.js",
+        css_url: "plugins/line-highlight/prism-line-highlight.min.css"
+      } as Plugin
+    ],
+    [
+      6,
+      {
+        dependencies: [0, 1],
+        js_url: "plugins/autoloader/prism-autoloader.min.js",
+        after_load: () => {
+          window.Prism.plugins.autoloader.languages_path = this.cdn_root + 'components/'
+        }
+      } as Plugin
+    ],
+    [
+      7,
+      {
+        dependencies: [0],
+        js_url: "plugins/inline-color/prism-inline-color.min.js",
+        css_url: "plugins/inline-color/prism-inline-color.min.css"
+      } as Plugin
+    ]
+  ]);
+  constructor(options?: Options) {
+    if (options?.cdn_root) {
+      this.cdn_root = options.cdn_root;
+    }
+    if (options?.theme) {
+      this.plugins_.forEach(plugin => {
+        if (plugin.id === "Core") {
+          plugin.css_url = options.theme
+        }
+      })
+    }
     this.promises_ = []
     const load = async (plugin: Plugin) => {
       if (plugin.dependencies) {
         for (const dep of plugin.dependencies) {
-          const dep_plugin = plugins.get(dep)
+          const dep_plugin = this.plugins_.get(dep)
           if (dep_plugin) {
             await load(dep_plugin) // 等待所有依赖加载完毕
           }
@@ -109,13 +120,14 @@ export default class CodeHighlighter {
             plugin.before_load?.() // 加载前的操作
             const link = document.createElement("link")
             link.rel = "stylesheet"
-            link.href = plugin.css_url
+            link.href = this.cdn_root + plugin.css_url
             document.head.appendChild(link)
           }
           if (plugin.js_url) {
             const script = document.createElement("script")
             script.async = true
-            script.src = plugin.js_url
+            script.src = this.cdn_root + plugin.js_url
+            console.log(script.src)
             script.onload = () => {
               resolve() // 加载成功兑现
               console.log(`Successfully loaded ${plugin.js_url}.`)
@@ -145,9 +157,9 @@ export default class CodeHighlighter {
    */
   async highlight(e: Element) {
     Promise.all(this.promises_)
-    .then(() => {
-      window.Prism.highlightElement(e);
-    });
+      .then(() => {
+        window.Prism.highlightElement(e);
+      });
   }
   /**
    * 高亮所有元素。

@@ -1,39 +1,22 @@
 <template>
   <ImageViewer />
-  <ArticleLayout
-    v-if="format === 'blog'"
-    :content_markdown="content_markdown"
-    :sidebar="article_list"
-    :footer_markdown="footer_markdown"
-  />
+  <ArticleLayout v-if="metadata?.format==='html'" :metadata="metadata" />
+  <SlideLayout v-else-if="metadata?.format==='revealjs'" :metadata="metadata" />
 </template>
+
 <script lang="ts" setup>
 import ArticleLayout from '@/components/blog/ArticleLayout.vue';
 import ImageViewer from './components/ImageViewer.vue';
-import type { Sidebar } from "./scripts/markdown/Sidebar";
 import { onUpdated, ref } from 'vue';
+import SlideLayout from './components/presentation/SlideLayout.vue';
+import type { Metadata } from './scripts/markdown/Metadata';
 
-type Metadata = {
-  format: "blog" | "presentation" | undefined, // 格式类型
-  title: string, // 标题
-  content: string, // 主题内容
-  sidebar?: Sidebar, // 边栏导航
-  footer?: string // 页脚
-};
-
-const format = ref<string|undefined>("");
-const content_markdown = ref("");
-const article_list = ref<Sidebar>();
-const footer_markdown = ref<string|undefined>("");
+const metadata = ref<Metadata>();
 
 const metadata_tag = document.getElementById("__metadata__");
 if (metadata_tag) {
   const text_content = metadata_tag.textContent ? metadata_tag.textContent : "{}";
-  const metadata = JSON.parse(text_content) as Metadata;
-  format.value = metadata.format;
-  content_markdown.value = metadata.content;
-  article_list.value = metadata.sidebar;
-  footer_markdown.value = metadata.footer;
+  metadata.value = JSON.parse(text_content) as Metadata;
 }
 
 onUpdated(() => {
@@ -54,15 +37,7 @@ onUpdated(() => {
 </script>
 
 <style lang="scss">
-@use "@/styles/main.scss";
 @use "@/styles/CustomContainer.scss";
-
-.Layout {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 20px;
-}
 
 @font-face {
   font-family: "code";

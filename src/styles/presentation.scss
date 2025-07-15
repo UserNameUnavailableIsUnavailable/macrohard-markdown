@@ -1,44 +1,37 @@
-$main-font-size: 18px;
-$background-color: #1A1A1A;
-$text-color: #f3f3f3;
-
 :root {
-  --background-color: $background-color;
-  --text-color: $text-color;
+  --main-font-size: 18px;
 }
 
 body {
-  background-color: $background-color;
-  color: $text-color;
   transition: 0.3s ease-in-out;
 }
 
 html {
-  font-size: $main-font-size;
+  font-size: var(--main-font-size);
 }
 
 .Content h1 {
-  font-size: $main-font-size + 20px;
+  font-size: var(--main-font-size) + 20px;
 }
 
 .Content h2 {
-  font-size: $main-font-size + 16px;
+  font-size: var(--main-font-size) + 16px;
 }
 
 .Content h3 {
-  font-size: $main-font-size + 12px;
+  font-size: var(--main-font-size) + 12px;
 }
 
 .Content h4 {
-  font-size: $main-font-size + 8px;
+  font-size: var(--main-font-size) + 8px;
 }
 
 .Content h4 {
-  font-size: $main-font-size + 4px;
+  font-size: var(--main-font-size) + 4px;
 }
 
 .Content h5 .Content h6 .Content p {
-  font-size: $main-font-size;
+  font-size: var(--main-font-size);
 }
 
 /* 小节标题后跟随的锚点元素，默认处于隐藏状态 */

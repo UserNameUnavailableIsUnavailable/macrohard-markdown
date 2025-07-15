@@ -1,5 +1,18 @@
 ---
-title: a
+title: Sectionize
+format: revealjs
 ---
 
-![](/footer/creative-commons-nc.svg){width="16px"}
+## 2
+
+:::: { #custom-block .columns width="200" }
+::: { .column }
+### 第一栏
+:::
+::: { .column }
+### 第二栏
+:::
+::: { .column }
+### 第三栏
+:::
+::::

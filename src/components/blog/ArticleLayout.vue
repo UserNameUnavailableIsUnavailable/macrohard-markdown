@@ -1,7 +1,7 @@
 <template>
   <article class="BlogLayout">
-    <nav class="SideNav" v-if="props.sidebar">
-      <ArticleSidebar :items="props.sidebar" />
+    <nav class="SideNav" v-if="metadata.sidebar">
+      <ArticleSidebar :items="metadata.sidebar" />
     </nav>
     <nav v-if="toc.length > 0" class="SideToC">
       <ArticleTableOfContents :items="toc" />
@@ -17,42 +17,41 @@
 
 <script lang="ts" setup>
 import Content from './ArticleContent.vue';
-import { BlogParser, type TableOfContents } from '@/scripts/markdown/Parser';
+import { HTMLParser, type TableOfContents } from '@/scripts/markdown/Parser';
 import ArticleSidebar from './ArticleList.vue';
 import ArticleTableOfContents from "./ArticleTableOfContents.vue";
 import { computed, ref, watch } from 'vue';
-import { type Sidebar } from '@/scripts/markdown/Sidebar';
 import Footer from './ArticleFooter.vue';
+import type { Metadata } from '@/scripts/markdown/Metadata';
 
 const props = defineProps<{
-  content_markdown: string,
-  sidebar?: Sidebar|null,
-  footer_markdown?: string|null
+  metadata: Metadata
 }>();
 
+const content = computed(() => {
+  return `# ${props.metadata.title}\n${props.metadata.content}`;
+});
 const content_html = ref("");
 const toc = ref<TableOfContents>([]);
 
-watch(() => props.content_markdown, (content_markdown) => {
-  BlogParser.parse(content_markdown);
-  content_html.value = BlogParser.content;
-  toc.value = BlogParser.toc;
+watch(content, (content) => {
+  HTMLParser.parse(content);
+  content_html.value = HTMLParser.content;
+  toc.value = HTMLParser.toc;
 }, {
   immediate: true
 });
 
-watch(() => props.sidebar, (s) => {
-  if (s) {
-
-  }
-});
-
 const footer_html = computed(() => {
-  if (!props.footer_markdown) return "";
-  BlogParser.parse(props.footer_markdown);
-  return BlogParser.content;
+  if (!props.metadata.footer) return null;
+  HTMLParser.parse(props.metadata.footer);
+  return HTMLParser.content;
 });
 </script>
+
+<style lang="scss">
+@use "@/styles/blog.scss";
+</style>
 
 <style lang="scss" scoped>
 .BlogLayout {

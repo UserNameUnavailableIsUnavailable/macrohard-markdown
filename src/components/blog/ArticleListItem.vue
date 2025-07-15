@@ -25,7 +25,7 @@
 import { computed, defineProps, onMounted, ref } from 'vue';
 import { type SidebarItem } from '@/scripts/markdown/Sidebar';
 import Item from "@/components/blog/ArticleListItem.vue";
-import { BlogParser } from '@/scripts/markdown/Parser';
+import { HTMLParser } from '@/scripts/markdown/Parser';
 
 const props = defineProps<{ item: SidebarItem }>();
 
@@ -52,8 +52,8 @@ onMounted(() => {
 const title = computed(() => {
   // 解析得到的 HTML 会被包含在 <p></p> 内，需要移除外层 <p> 标签
   const title = props.item.title;
-  BlogParser.parse(title);
-  const parsed_title = BlogParser.content.trim();
+  HTMLParser.parse(title);
+  const parsed_title = HTMLParser.content.trim();
   const match = parsed_title.match(/^\<p\>(.*)\<\/p\>$/);
   return match ? match[1] : props.item.title;
 });

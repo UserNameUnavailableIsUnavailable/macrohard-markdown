@@ -12,6 +12,7 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
+    "@sindresorhus/slugify": "^2.2.1",
     "axios": "^1.10.0",
     "bootstrap": "^5.3.7",
     "express": "^5.1.0",
@@ -33,6 +34,9 @@
     "markdown-it-underline": "^1.0.1",
     "mime": "^4.0.7",
     "node-html-parser": "^7.0.1",
+    "reveal.js": "^5.2.1",
+    "reveal.js-logo-plugin": "^1.0.0",
+    "reveal.js-menu": "^2.1.0",
     "vue": "^3.5.13",
     "vue-router": "^4.5.1",
     "vue-sidebar-menu": "^5.7.0"
@@ -47,6 +51,7 @@
     "@types/markdown-it-footnote": "^3.0.4",
     "@types/mime-types": "^3.0.1",
     "@types/node": "^22.14.0",
+    "@types/reveal.js": "^5.2.0",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vue/eslint-config-typescript": "^14.5.0",
     "@vue/tsconfig": "^0.7.0",

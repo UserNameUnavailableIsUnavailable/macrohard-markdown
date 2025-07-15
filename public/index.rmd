@@ -1,6 +1,20 @@
 ---
 title: 基于 [Markdown-It](https://github.com/markdown-it/markdown-it) 的 R Markdown 扩展语法实现（部分）
+work-source: "[Macrohard](https://macrohard.fun/)"
+citations: 114514 citations
+format: revealjs
+author:
+    - Foo^1^
+    - Bar^2^
+    - Baz^2^
+    - Qux^3^
+institute:
+    - Ipsum^1^
+    - Dolor^2^
+    - Sit^3^
 ---
+
+## 概述
 
 本文介绍 Macrohard 站点使用的 R Markdown 扩展语法，需要读者具备 HTML 和 Markdown 基础。该实现基于 [Markdown-It](https://github.com/markdown-it/markdown-it) 解析器以及其强大的衍生插件，部分缺少对应插件或现有插件无法满足需求的的特性则由我自行实现，这些特性的实现将在完善后作为插件开源。
 
@@ -103,7 +117,7 @@ R Markdown 预览可使用 Quarto 提供的插件，详见 [Quarto 官网](https
 
 :::: { #custom-block .columns width="200" }
 ::: { .column }
-### 第一栏
+<!-- ### 第一栏 -->
 第一栏
 
 第一栏
@@ -111,7 +125,7 @@ R Markdown 预览可使用 Quarto 提供的插件，详见 [Quarto 官网](https
 第一栏
 :::
 ::: { .column }
-### 第二栏
+<!-- ### 第二栏 -->
 第二栏
 
 第二栏
@@ -119,7 +133,7 @@ R Markdown 预览可使用 Quarto 提供的插件，详见 [Quarto 官网](https
 第二栏
 :::
 ::: { .column }
-### 第三栏
+<!-- ### 第三栏 -->
 
 第三栏
 

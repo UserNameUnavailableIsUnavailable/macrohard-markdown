@@ -41,7 +41,7 @@ export class Parser {
   private content_: string = "";
   private toc_: TableOfContents = [];
 
-  public constructor(type: "blog" | "presentation") {
+  public constructor(type: "html" | "revealjs") {
     this.parser_ = new MarkdownIt({ html: true, linkify: true, typographer: true });
     // 保护数学公式
     const math_renderer = new MathHandler({
@@ -51,30 +51,52 @@ export class Parser {
       inline_surrounding: ["<span class='math inline'>\n", "</span>\n"],
       block_surrounding: ["<div class='math block'>\n", "</div>\n"]
     });
-
-    this.parser_
-      .use(MarkdownBracketedSpans) // [Foo]{ #Foo } -> Foo
-      .use(MarkdownAttrs) // 自定义属性，如 { #Foo .Bar width="200" }
-      .use(MarkdownSub) // 下标
-      .use(MarkdownSup) // 上标
-      .use(MarkdownUnderline) // 下划线
-      .use(MarkdownInlineCodeHandler) // 内联代码块
-      .use(MarkdownBlockQuoteHandler) // 引用块
-      .use(MarkdownFootnote) // 生成脚注
-      .use(MarkdownAnchor, { permalink: true, permalinkBefore: false, permalinkSymbol: '§' }) // 锚点
-      .use(ToCGenerator)
-      .use(MarkdownSectionize) // 将标题及其内容纳入 <section> 中
-      .use(MarkdownAccomodateFigure) // 图片增强功能
-      .use(math_renderer.get_markdown_it_plugin())
-      .use(
-        MarkdownContainer,
-        "CustomContainer",
-        {
-          validate: CustomContainer.validate,
-          render: CustomContainer.render
-        }
-      ); // 使用 ::: {} ::: 自定义容器
-    this.parser_.block.ruler.at("table", SmartTable);
+    if (type === "html") {
+      this.parser_
+        .use(MarkdownBracketedSpans) // [Foo]{ #Foo } -> Foo
+        .use(MarkdownAttrs) // 自定义属性，如 { #Foo .Bar width="200" }
+        .use(MarkdownSub) // 下标
+        .use(MarkdownSup) // 上标
+        .use(MarkdownUnderline) // 下划线
+        .use(MarkdownInlineCodeHandler) // 内联代码块
+        .use(MarkdownBlockQuoteHandler) // 引用块
+        .use(MarkdownFootnote) // 生成脚注
+        .use(MarkdownAnchor, { permalink: true, permalinkBefore: false, permalinkSymbol: '§' }) // 锚点
+        .use(ToCGenerator)
+        .use(
+          MarkdownContainer,
+          "CustomContainer",
+          {
+            validate: CustomContainer.validate,
+            render: CustomContainer.render
+          }
+        ) // 使用 ::: {} ::: 自定义容器
+        .use(MarkdownSectionize, { max_allowed_level: 4 }) // 将标题及其内容纳入 <section> 中
+        .use(MarkdownAccomodateFigure) // 图片增强功能
+        .use(math_renderer.get_markdown_it_plugin());
+      this.parser_.block.ruler.at("table", SmartTable);
+    } else if (type === "revealjs") {
+      this.parser_
+        .use(MarkdownBracketedSpans) // [Foo]{ #Foo } -> Foo
+        .use(MarkdownAttrs) // 自定义属性，如 { #Foo .Bar width="200" }
+        .use(MarkdownSub) // 下标
+        .use(MarkdownSup) // 上标
+        .use(MarkdownUnderline) // 下划线
+        .use(MarkdownInlineCodeHandler) // 内联代码块
+        .use(MarkdownBlockQuoteHandler) // 引用块
+        .use(
+          MarkdownContainer,
+          "CustomContainer",
+          {
+            validate: CustomContainer.validate,
+            render: CustomContainer.render
+          }
+        ) // 使用 ::: {} ::: 自定义容器
+        .use(MarkdownSectionize, { max_allowed_level: 3 }) // revealjs 中 section 最多嵌套 2 层，其中一级标题用于 title page
+        .use(MarkdownAccomodateFigure) // 图片增强功能
+        .use(math_renderer.get_markdown_it_plugin());
+      this.parser_.block.ruler.at("table", SmartTable);
+    }
   }
 
   public parse(blob: string) {
@@ -122,4 +144,5 @@ export class Parser {
   }
 }
 
-export const BlogParser = new Parser("blog");
+export const HTMLParser = new Parser("html");
+export const RevealJSParser = new Parser("revealjs");
