@@ -34,7 +34,7 @@ const ToolDescription = ref<HTMLButtonElement | null>(null);
 
 const initial_main_font_size = parseFloat(window.getComputedStyle(document.documentElement).getPropertyValue("--main-font-size").trim());
 
-console.log(getComputedStyle(document.documentElement).getPropertyValue("--main-font-size"));
+console.log(`Default font size: ${initial_main_font_size}px`);
 
 function mouse_over(event: MouseEvent) {
   if (!ToolDescription.value) return;

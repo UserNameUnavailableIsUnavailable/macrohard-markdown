@@ -105,6 +105,15 @@ function generateMetadata(file_path: string) {
       json.footer = null;
     }
   }
+  if (json.bibliography) {
+    const bibliography_path = getAbsolutePath(json.bibliography);
+    if (isFile(bibliography_path)) {
+      const bibliography = FS.readFileSync(bibliography_path, "utf-8");
+      json.bibliography = bibliography;
+    } else {
+      json.bibliography = null;
+    }
+  }
   return json;
 }
 

@@ -44,34 +44,22 @@ const code_highlighter = new CodeHighlighter({
 
 const content_html = computed(() => {
   RevealJSParser.parse(props.metadata.content);
-  console.log(RevealJSParser.content);
   return RevealJSParser.content;
 });
 
+function isOverflowing(element: HTMLElement) {
+  return element.scrollHeight > element.clientHeight;
+}
+
 // 对于章节嵌套的情况，调整级灯片的滚动范围
-// function update_nested_scroll_range() {
-//   const current = Reveal.getCurrentSlide() as HTMLElement;
-//   const parent = current.parentElement;
-
-//   if (!parent || parent.tagName !== 'SECTION' || !parent.classList.contains('present')) return;
-
-//   const children = Array.from(parent.children);
-//   const relevant = children.filter(el => {
-//     return el.classList.contains('present');
-//   });
-
-//   const total_height = relevant
-//     .map(el => el.scrollHeight)
-//     .reduce((sum, h) => sum + h, 0);
-
-//   parent.style.maxHeight = `${window.innerHeight}px`;
-//   parent.style.height = `${total_height}px`;
-//   console.log("Total height:", total_height);
-//   console.log("Window height:", window.innerHeight);
-//   console.log("Scroll height:", parent.scrollHeight);
-//   parent.style.overflowY = total_height > window.innerHeight ? 'auto' : 'hidden';
-//   parent.scrollTop = 0;
-// }
+function update_nested_scroll_range() {
+  const current = Reveal.getCurrentSlide() as HTMLElement;
+  const parent = current.parentElement;
+  if (!parent || parent.tagName !== 'SECTION' || !parent.classList.contains('present')) return;
+  console.log(parent.scrollHeight, parent.clientHeight);
+  parent.style.overflowY = isOverflowing(parent) ? 'scroll' : 'hidden';
+  parent.scrollTop = 0;
+}
 
 function on_fullscreen_change() {
   Reveal.layout();
@@ -108,7 +96,6 @@ onMounted(() => {
           titleSelector: "h1, h2, h3, h4, h5, h6",
         }
       });
-      console.log(Reveal.getPlugin("menu"));
       toggle_menu.value = Reveal.getPlugin("menu").toggle; // RevealJS v4+ 的获取插件方式
       document.addEventListener('fullscreenchange', on_fullscreen_change);
     } catch (error) {
@@ -146,15 +133,15 @@ onUnmounted(() => {
   z-index: 0;
 }
 
-// 处理幻灯片的滚动行为
-.reveal .slides section > section.past,
-.reveal .slides section > section.future {
-  height: 0 !important; // 将不可见的幻灯片高度强行置为 0，以免影响真实 scrollHeight 的计算，此方法好处是不影响切换时的动画效果
+.reveal:not(.overview)> // 非概览模式（ESC）下
+.slides section:not(.present) * { // 选取非当前可见的幻灯片内的所有元素
+  height: 0 !important; // 隐藏非当前幻灯片的内容（将章节中所有元素高度置为 0，这样不会影响切换特效）
 }
 
 .reveal>.slides section {
-  overflow: auto; // 允许滚动
   max-height: 100%;
+  height: auto;
+  overflow: auto; // 允许滚动
 }
 
 .reveal>.slides section section {

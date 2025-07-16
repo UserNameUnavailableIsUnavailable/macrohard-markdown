@@ -12,5 +12,6 @@ export type Metadata = {
   "work-source": string | null, // 工作来源
   "citations": string | null, // 引用量
   logo?: string | null
+  bibliography?: string | null // 参考文献
 };
 

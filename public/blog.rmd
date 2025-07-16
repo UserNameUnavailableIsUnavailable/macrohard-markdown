@@ -1,0 +1,231 @@
+---
+title: 基于 [Markdown-It](https://github.com/markdown-it/markdown-it) 的 R Markdown 扩展语法实现
+work-source: "[Macrohard](https://macrohard.fun/)"
+citations: 114514 citations
+format: html
+author:
+    - Foo^1^
+    - Bar^2^
+    - Baz^2^
+    - Qux^3^
+institute:
+    - Ipsum^1^
+    - Dolor^2^
+    - Sit^3^
+bibliography: references.bib
+---
+
+## 概述
+
+本文介绍 Macrohard 站点使用的 R Markdown 扩展语法，需要读者具备 HTML 和 Markdown 基础。该实现基于 [Markdown-It](https://github.com/markdown-it/markdown-it) 解析器以及其强大的衍生插件，部分缺少对应插件或现有插件无法满足需求的的特性则由我自行实现，这些特性的实现将在完善后作为插件开源。
+
+本扩展采用纯前端实现，因此发布内容不需要本地编译，与同类产品 [Quarto](https://quarto.org) 不同（基于 [Pandoc](https://pandoc.org/)）。由于个人时间和精力有限，故仅实现了 R Markdown 扩展语法的一个子集。
+
+## 预览
+
+R Markdown 预览可使用 Quarto 提供的插件，详见 [Quarto 官网](https://quarto.org/) 及 [VSCode Quarto 插件](https://marketplace.visualstudio.com/items?itemName=quarto.quarto)。
+
+## 基本扩展
+
+|扩展|语法|效果|
+|---|---|---|
+|上标|`Foo^1^`|Foo^bar^|
+|下标|`Foo~1~`|Foo~bar~|
+|下划线|`_Foo_`|_Foo_ [^about_underline]|
+|删除线|`~~Foo~~`|~~Foo~~|
+
+[^about_underline]: 该特性与 R Markdown 的行为不同，R Markdown 中仅支持使用 `[Foo]{.underline}` 来实现下划线。在标准（非扩展）的 Markdown 语法中 `_Foo_` 将会产生斜体的 *Foo*，而 `*Foo*` 已经具有一样的功能，故这里决定覆盖标准 Markdown 的行为，提供一种更加简便的产生下划线的扩展语法。
+
+## 属性语法
+
+通过在 Markdown 语句块后附加 `{ #id .class attribute="value" }` 可以为该语句块指定属性。例如，下面的 Markdown 语句：
+
+```markdown
+[Foo]{ #Foo-Id .Foo-Inline FooProperty="Foo-Property" }
+```
+
+将会产生如下的 HTML 标记：
+
+```html
+<span id="Foo-Id" class="Foo-Inline" FooProperty="Foo-Property">Foo</span>
+```
+
+对于像标题这些特殊的场景，则可以按照下面的方式添加属性：
+
+```markdown
+## Foo{ .class="Foo-Heading" }
+```
+
+这将产生如下的 HTML 标记 [^about_heading_anchor]：
+
+```html
+<h2 id="Foo" class="Foo-Heading">Foo</h2>
+```
+
+[^about_heading_anchor]: 在不显式为标题指定 `id` 属性的情况下，本扩展将为标题自动提供 `id` 属性，并生成锚点元素，方便在页内跳转。
+
+一般而言，仅建议使用该语法来定义 `id`、`class` 以及 `width` 这样的简单属性，**不建议**定义过于复杂的属性（比如 `styles="color: red; display: block;"` 就过于复杂），以免导致意料之外的问题。
+
+解析器中预定义了 `left`（左对齐）、`center`（居中）、`right`（右对齐），可以通过下面的代码实现混合对齐效果：
+
+```markdown
+> 逝者如斯夫，不舍昼夜。
+>
+> ——《论语》{.right}
+```
+
+> 逝者如斯夫，不舍昼夜。
+>
+> ——《论语》{.right}
+
+## 容器
+
+使用 `::: :::` 可以定义一个 `<div>`{ .language-html } 容器，结合上面提到的属性语法，可以为容器指定相应的属性。容器允许嵌套，嵌套时，定义外层容器的冒号数量（**至少** 3 个）需要大于内层。
+
+例如，下面的代码定义了一个栏目块（`class="columns"`），其中包含了三栏文本（`class="column"`）。
+
+```markdown
+:::: { #custom-block .columns width="200" }
+::: { .column }
+### 第一栏
+
+第一栏
+
+第一栏
+:::
+::: { .column }
+### 第二栏
+
+第二栏
+
+第二栏
+:::
+::: { .column }
+### 第三栏
+
+第三栏
+
+第三栏
+:::
+::::
+```
+
+`columns` 和 `column` 均是本 Markdown 扩展中预定义的 CSS 类，用于实现分栏效果。因此，上面的代码可以实现如下的效果（注意，不允许在幻灯片的 `column` 内定义标题）：
+
+:::: { #custom-block .columns width="200" }
+::: { .column }
+### 第一栏
+
+第一栏
+
+第一栏
+:::
+::: { .column }
+### 第二栏
+
+第二栏
+
+第二栏
+:::
+::: { .column }
+### 第三栏
+
+第三栏
+
+第三栏
+:::
+::::
+
+## 代码高亮
+
+### 内联代码
+
+可以通过为内联代码块附加属性的方式来高亮内联代码块，例如：
+
+```markdown
+`p { color: red; }`{ .language-css }
+```
+
+效果如下：
+
+`p { color: red; }`{.language-css}
+
+[Mix inline `code` with ordinary text](https://macrohard.fun/)
+
+若要在内联代码块中使用反引号 `` ` ``，则需要像下面这样使用**至少**两个反引号作为限定符，并且在反引号与限定符相邻的情况下需要在反引号与限定符之间添加空白字符：
+
+```markdown
+`` ` ``
+```
+
+若内联代码块中的反引号连续出现的最大次数为 $N$，则外层需要**至少** $N + 1$ 个反引号作为限定符，例如：
+
+```markdown
+```` ``` ````
+```
+
+这将产生：```` ``` ````。
+
+### 代码块
+
+除了基本的高亮，还可以通过附加属性 `code-line-numbers` 来指定需要**强调**的行号，例如：
+
+`````markdown
+```c { code-line-numbers="1-2,5,7" }
+#include <stdio.h>
+int a = 0;
+int b = 1;
+foo();
+bar();
+/*---------------*/
+assert(a != b);
+/*===============*/
+#ifdef _DEBUG
+printf("hello, world!");
+#endif
+```
+`````
+
+可以实现如下效果：
+
+```c { code-line-numbers="1-2,5,7" }
+#include <stdio.h>
+int a = 0;
+int b = 1;
+foo();
+bar();
+/*---------------*/
+assert(a != b);
+/*===============*/
+#ifdef _DEBUG
+printf("hello, world!");
+#endif
+```
+
+若设置 `code-line-numbers="true"`，则对所有行应用强调效果。
+
+若要在代码块中使用 `` ``` ``，则代码块限定符中的反引号**至少**需要 4 个，以此类推，若代码块中反引号连续出现次数最大值为 $N$，则代码块限定符中的反引号**至少**需要 $N + 1$ 个。
+
+## 公式
+
+本扩展支持使用 `$...$`（**推荐**）及 `\(...\)` 作为行内公式定界符，`$$...$$`（**推荐**）及 `\[...\]` 作为块级公式定界符。
+
+:::{.center}
+|theorem (EN, left aligned)|定理（中文，居中）|formula (right-aligned)|
+|:---|:---:|---:|
+|Newton's Law II|牛顿第二定律|$\boldsymbol{F} = m\boldsymbol{a}$|
+|Law of Universal Gravitation|万有引力定律|$\boldsymbol{F} = G\frac{Mm}{\|r\|^3}\boldsymbol{r}$|
+:::
+
+$$\boldsymbol{e}_r = \frac{\boldsymbol{r}}{\|\boldsymbol{r}\|}.$$
+
+$$
+\begin{equation}
+y = \boldsymbol{w}^\mathsf{T}\boldsymbol{x} + b
+y = ax+b
+\end{equation}
+$$
+
+![普通文本 `code` $f\left(x\right)$](./doro-maodie.gif){ .center }
+
+[^1]: Hello!

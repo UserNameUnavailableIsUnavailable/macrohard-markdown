@@ -40,7 +40,6 @@ const DELIM_UNITS = ['`']
 
 // 重新实现了 escapedSplit 函数，对表格中出现的内联代码、数学公式进行专门处理
 function escapedSplit(str: string) {
-  console.log(str);
   const ret: string[] = []
   let cell_item_begin = 0;
   let cell_item_end = 0;

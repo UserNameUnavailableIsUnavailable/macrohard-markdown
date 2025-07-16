@@ -1,5 +1,5 @@
 ---
-title: 基于 [Markdown-It](https://github.com/markdown-it/markdown-it) 的 R Markdown 扩展语法实现（部分）
+title: 基于 [Markdown-It](https://github.com/markdown-it/markdown-it) 的 R Markdown 扩展语法实现（RevealJS 幻灯片效果）
 work-source: "[Macrohard](https://macrohard.fun/)"
 citations: 114514 citations
 format: revealjs
@@ -12,6 +12,7 @@ institute:
     - Ipsum^1^
     - Dolor^2^
     - Sit^3^
+bibliography: references.bib
 ---
 
 ## 概述
@@ -87,7 +88,6 @@ R Markdown 预览可使用 Quarto 提供的插件，详见 [Quarto 官网](https
 :::: { #custom-block .columns width="200" }
 ::: { .column }
 ### 第一栏
-第一栏
 
 第一栏
 
@@ -95,7 +95,6 @@ R Markdown 预览可使用 Quarto 提供的插件，详见 [Quarto 官网](https
 :::
 ::: { .column }
 ### 第二栏
-第二栏
 
 第二栏
 
@@ -107,17 +106,14 @@ R Markdown 预览可使用 Quarto 提供的插件，详见 [Quarto 官网](https
 第三栏
 
 第三栏
-
-第三栏
 :::
 ::::
 ```
 
-`columns` 和 `column` 均是本 Markdown 扩展中预定义的 CSS 类，用于实现分栏效果。因此，上面的代码可以实现如下的效果：
+`columns` 和 `column` 均是本 Markdown 扩展中预定义的 CSS 类，用于实现分栏效果。因此，上面的代码可以实现如下的效果（注意，不允许在幻灯片的 `column` 内定义标题）：
 
 :::: { #custom-block .columns width="200" }
 ::: { .column }
-<!-- ### 第一栏 -->
 第一栏
 
 第一栏
@@ -125,7 +121,6 @@ R Markdown 预览可使用 Quarto 提供的插件，详见 [Quarto 官网](https
 第一栏
 :::
 ::: { .column }
-<!-- ### 第二栏 -->
 第二栏
 
 第二栏
@@ -133,8 +128,6 @@ R Markdown 预览可使用 Quarto 提供的插件，详见 [Quarto 官网](https
 第二栏
 :::
 ::: { .column }
-<!-- ### 第三栏 -->
-
 第三栏
 
 第三栏

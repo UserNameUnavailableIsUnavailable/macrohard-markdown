@@ -20,7 +20,6 @@ export default function (md: MarkdownIt) {
         // 然后，通过 textContent 获取到转义后的文本，即可安全地存放到 alt 属性中。
         const p = document.createElement('p');
         p.innerHTML = caption_html.replace(/\n/g, ''); // 原始标签内可能包含换行，故先替换之，否则写进 alt 属性的内容也会包含换行
-        console.log(p.textContent);
         const attr_list: string[] = [];
         const IGNORE_PROPERTIES = ["alt", "src"]
         token.attrs?.forEach(e => {

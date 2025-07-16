@@ -15,51 +15,51 @@ body {
 }
 
 html {
-  font-size: $main-font-size;
+  font-size: var(--main-font-size);
 }
 
-.Content h1 {
-  font-size: $main-font-size + 20px;
+h1 {
+  font-size: calc(var(--main-font-size) + 20px);
 }
 
-.Content h2 {
-  font-size: $main-font-size + 16px;
+h2 {
+  font-size: calc(var(--main-font-size) + 16px);
 }
 
-.Content h3 {
-  font-size: $main-font-size + 12px;
+h3 {
+  font-size: calc(var(--main-font-size) + 12px);
 }
 
-.Content h4 {
-  font-size: $main-font-size + 8px;
+h4 {
+  font-size: calc(var(--main-font-size) + 8px);
 }
 
-.Content h4 {
-  font-size: $main-font-size + 4px;
+h4 {
+  font-size: calc(var(--main-font-size) + 4px);
 }
 
-.Content h5 .Content h6 .Content p {
-  font-size: $main-font-size;
+h5 h6 p {
+  font-size: var(--main-font-size);
 }
 
 /* 小节标题后跟随的锚点元素，默认处于隐藏状态 */
-.Content h1 .header-anchor,
-.Content h2 .header-anchor,
-.Content h3 .header-anchor,
-.Content h4 .header-anchor,
-.Content h5 .header-anchor,
-.Content h6 .header-anchor {
+h1 .header-anchor,
+h2 .header-anchor,
+h3 .header-anchor,
+h4 .header-anchor,
+h5 .header-anchor,
+h6 .header-anchor {
   visibility: hidden;
   text-decoration: none;
 }
 
 /* 指针悬停在小节标题上时，其后跟随的锚点元素变为可见 */
-.Content h1:hover .header-anchor,
-.Content h2:hover .header-anchor,
-.Content h3:hover .header-anchor,
-.Content h4:hover .header-anchor,
-.Content h5:hover .header-anchor,
-.Content h6:hover .header-anchor {
+h1:hover .header-anchor,
+h2:hover .header-anchor,
+h3:hover .header-anchor,
+h4:hover .header-anchor,
+h5:hover .header-anchor,
+h6:hover .header-anchor {
   visibility: visible;
 }
 

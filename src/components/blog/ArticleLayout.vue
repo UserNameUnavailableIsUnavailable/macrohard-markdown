@@ -51,9 +51,6 @@ const footer_html = computed(() => {
 
 <style lang="scss">
 @use "@/styles/blog.scss";
-</style>
-
-<style lang="scss" scoped>
 .BlogLayout {
   display: grid;
   grid-template-columns: auto 1fr;
